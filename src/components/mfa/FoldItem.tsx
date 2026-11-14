@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -73,7 +74,14 @@ function Strips({
       style={{ ["--i" as string]: i }}
     >
       <div className="fold-face">
-        <img src={src} alt="" decoding="async" className="fold-face-image" />
+        <Image
+          src={src}
+          alt=""
+          width={1600}
+          height={900}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="fold-face-image"
+        />
         {/* faces tilted towards the light get a highlight, the others a shadow */}
         <div
           ref={setShade(i)}

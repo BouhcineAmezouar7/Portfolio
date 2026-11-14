@@ -10,7 +10,7 @@ import {
   FiLinkedin,
   FiMail,
 } from "react-icons/fi";
-import { portfolioYear, profile, socialLinks } from "@/data/portfolio";
+import { profile, socialLinks } from "@/data/portfolio";
 import { siteEase as homeEase } from "@/lib/site-motion";
 
 const socialIcons = {
@@ -137,7 +137,7 @@ export default function HeroSection() {
                 </span>
 
                 <p className="max-w-[220px] text-sm font-medium uppercase leading-[1.5] tracking-[0.02em]">
-                  Software Engineering Student &amp; Full-Stack Developer.
+                  {profile.role} &amp; 1337 Coding School student.
                 </p>
               </div>
 

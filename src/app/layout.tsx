@@ -4,7 +4,6 @@ import { Archivo, JetBrains_Mono } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
 import SiteMotionProvider from "@/components/SiteMotionProvider";
 import ThemedGlowCursor from "@/components/ThemedGlowCursor";
-import PortfolioCubesBackground from "@/components/PortfolioCubesBackground";
 import SmoothScroll from "@/components/SmoothScroll";
 import type { Metadata } from "next";
 import { profile } from "@/data/portfolio";
@@ -58,11 +57,6 @@ export default function RootLayout({
         className={`${jetBrainsMono.className} ${archivo.variable} min-h-screen overflow-x-hidden bg-background/30`}
       >
         <SmoothScroll />
-
-        {/* Shared background layer for every route */}
-        <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden dark:blur-none blur-[4px]">
-          <PortfolioCubesBackground />
-        </div>
 
         {/* Website content */}
         <div className="relative z-10">

@@ -31,7 +31,7 @@ export default function ExperienceTimeline() {
             <span className="h-1.5 w-1.5 bg-accent" />
 
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
-              Career / Experience
+              Education / Experience
             </span>
           </div>
 
@@ -64,9 +64,8 @@ export default function ExperienceTimeline() {
             transition={{ delay: 0.12 }}
             className="max-w-md text-sm leading-7 text-muted"
           >
-            A journey of learning, collaboration, and
-            building real-world applications through
-            education and professional experience.
+            Project-based education and practical internships that connect
+            software foundations with real product work.
           </motion.p>
         </div>
 

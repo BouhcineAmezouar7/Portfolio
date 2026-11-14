@@ -1,28 +1,18 @@
-
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  FiArrowLeft,
-  FiArrowRight,
-  FiArrowUpRight,
-  FiCheck,
-  FiCode,
-  FiLayers,
-} from "react-icons/fi";
+import { FiArrowDown, FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 
-import { projects } from "@/data/portfolio";
 import SiteReveal from "@/components/SiteReveal";
+import { projects } from "@/data/portfolio";
 
 type ProjectDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+  return projects.map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({
@@ -31,9 +21,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = projects.find((item) => item.slug === slug);
 
-  if (!project) {
-    return { title: "Project not found" };
-  }
+  if (!project) return { title: "Project not found" };
 
   return {
     title: `${project.title} — Project Details`,
@@ -52,483 +40,356 @@ export default async function ProjectDetailPage({
   const project = projects[index];
   const previous = projects[index - 1];
   const next = projects[index + 1];
-
   const diagram =
-    "diagram" in project &&
-    typeof project.diagram === "string"
+    "diagram" in project && typeof project.diagram === "string"
       ? project.diagram
       : null;
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+    <main className="home-tone-dark relative min-h-screen overflow-hidden px-5 pb-8 text-foreground sm:px-8 lg:px-12">
+      <section className="relative border-b border-border pb-12 pt-10 sm:pb-16 sm:pt-14 lg:min-h-[760px] lg:pb-20 lg:pt-16">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 900 800"
+          fill="none"
+          className="pointer-events-none absolute -right-40 top-0 z-0 h-full w-[68%] min-w-[700px] max-md:hidden"
+        >
+          <path
+            d="M463 -36C453 78 561 118 602 199C640 275 596 337 502 322C408 307 329 349 337 433C346 527 493 561 618 510C715 470 775 524 736 610C697 696 563 703 476 640C397 583 315 626 339 715C356 779 438 795 471 846"
+            stroke="var(--accent)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M354 371C430 292 572 283 655 352C738 421 725 548 633 600C541 652 411 613 377 518C343 423 419 336 514 350C609 364 649 468 590 532C531 596 433 558 428 482C423 406 498 370 553 410"
+            stroke="var(--accent)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <circle cx="471" cy="770" r="9" stroke="var(--accent)" strokeWidth="2.5" />
+          <circle cx="471" cy="770" r="3" fill="var(--accent)" />
+        </svg>
 
-        {/* TOP NAVIGATION */}
         <SiteReveal>
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
-          <Link
-            href="/projects"
-            className="group inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground"
-          >
-            <FiArrowLeft
-              size={16}
-              className="transition-transform group-hover:-translate-x-1"
-            />
-            All projects
-          </Link>
-
-          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-            Project {String(index + 1).padStart(2, "0")} /{" "}
-            {String(projects.length).padStart(2, "0")}
-          </span>
+          <div className="relative z-10 flex items-center justify-between gap-5 border-b border-border pb-5">
+            <Link
+              href="/projects"
+              className="group inline-flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent sm:text-[10px]"
+            >
+              <FiArrowLeft className="transition-transform group-hover:-translate-x-1" size={15} />
+              Work index
+            </Link>
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted sm:text-[10px]">
+              {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+            </span>
           </div>
         </SiteReveal>
 
-        {/* =====================================
-            HERO — IMAGE LEFT / INFO RIGHT
-        ====================================== */}
-
-        <section className="grid gap-10 border-b border-border py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:py-20">
-
-          {/* LEFT — IMAGE */}
+        <div className="relative z-10 grid min-h-[600px] items-end gap-12 pt-16 lg:grid-cols-[1.35fr_0.65fr] lg:pt-24">
           <SiteReveal direction="left" className="min-w-0">
-            <div className="relative overflow-hidden border border-border bg-foreground/[0.035] p-3 sm:p-5 lg:p-7">
-
-              {/* IMAGE */}
-              <div className="relative aspect-[4/3] overflow-hidden border border-border bg-card">
-                <Image
-                  src={project.image}
-                  alt={`${project.title} project screenshot`}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 55vw"
-                  className="object-cover object-top"
-                />
-              </div>
-
-              {/* IMAGE NUMBER */}
-              <div className="absolute bottom-6 left-6 border border-border bg-background px-4 py-2 sm:bottom-9 sm:left-9">
-                <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-foreground">
-                  Preview / {project.number}
-                </span>
-              </div>
-            </div>
-
-            {/* IMAGE FOOTER */}
-            <div className="mt-4 flex items-center justify-between gap-4">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                Project screenshot
-              </span>
-
-              <span className="font-mono text-[10px] text-muted">
-                {project.year}
-              </span>
-            </div>
-          </SiteReveal>
-
-          {/* RIGHT — PROJECT INFO */}
-          <SiteReveal direction="right" delay={0.1} className="min-w-0 lg:pl-3">
-
-            {/* CATEGORY */}
-            <div className="mb-7 flex items-center gap-3">
-              <span className="h-2 w-2 bg-accent" />
-
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
-                {project.category}
-              </span>
-            </div>
-
-            {/* TITLE */}
-            <h1 className="break-words text-[clamp(3.2rem,5.7vw,6.5rem)] font-medium leading-[0.96] tracking-[-0.075em] text-foreground">
+            <p className="mb-7 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+              <span className="h-px w-10 bg-accent" />
+              {project.category}
+            </p>
+            <h1 className="break-words font-display text-[clamp(4rem,11vw,11rem)] font-black uppercase leading-[0.76] tracking-[-0.08em]">
               {project.title}
               <span className="text-accent">.</span>
             </h1>
+          </SiteReveal>
 
-            {/* DESCRIPTION */}
-            <p className="mt-8 max-w-xl text-sm leading-8 text-muted sm:text-base">
+          <SiteReveal direction="right" delay={0.12} className="min-w-0 lg:mb-3 lg:justify-self-end">
+            <div className="border-l border-border pl-6">
+              <p className="text-base font-medium leading-8 sm:text-lg">
+                {project.type}
+              </p>
+              <div className="mt-7 grid grid-cols-2 gap-6 border-t border-border pt-5 font-mono text-[9px] uppercase tracking-[0.15em]">
+                <div>
+                  <p className="text-muted">Status / Year</p>
+                  <p className="mt-2 text-accent">{project.year}</p>
+                </div>
+                <div>
+                  <p className="text-muted">Stack size</p>
+                  <p className="mt-2 text-accent">{String(project.tags.length).padStart(2, "0")} tools</p>
+                </div>
+              </div>
+              <a
+                href="#case-study"
+                className="mt-8 inline-flex items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent"
+              >
+                Explore the case study
+                <FiArrowDown className="text-accent" size={15} />
+              </a>
+            </div>
+          </SiteReveal>
+        </div>
+      </section>
+
+      <SiteReveal className="border-b border-border py-5 sm:py-8">
+        <figure className="relative overflow-hidden bg-card">
+          <div className="relative aspect-[16/10] w-full sm:aspect-[16/8] lg:aspect-[16/7]">
+            <Image
+              src={project.image}
+              alt={`${project.title} project screenshot`}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-top"
+            />
+            <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+          </div>
+          <figcaption className="absolute left-4 top-4 border border-white/25 bg-black/50 px-3 py-2 font-mono text-[8px] uppercase tracking-[0.17em] text-white backdrop-blur-sm sm:left-6 sm:top-6 sm:text-[9px]">
+            Product view / {project.number}
+          </figcaption>
+        </figure>
+      </SiteReveal>
+
+      <div id="case-study" className="scroll-mt-24">
+        <section className="home-tone-light -mx-5 grid gap-12 border-b border-border px-5 py-16 sm:-mx-8 sm:px-8 lg:-mx-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20 lg:px-12 lg:py-24">
+          <SiteReveal direction="left">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+              01 / The build
+            </p>
+            <h2 className="mt-7 font-display text-[clamp(3.6rem,7vw,7.5rem)] font-black uppercase leading-[0.8] tracking-[-0.07em]">
+              Project
+              <br />
+              scope<span className="text-accent">.</span>
+            </h2>
+          </SiteReveal>
+
+          <SiteReveal direction="right" delay={0.08}>
+            <p className="max-w-4xl font-display text-[clamp(1.65rem,3vw,3.25rem)] font-semibold leading-[1.18] tracking-[-0.045em]">
               {project.description}
             </p>
-
-            {/* PROJECT META */}
-            <div className="mt-10 grid grid-cols-3 gap-4 border-y border-border py-6">
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.13em] text-muted">
-                  Type
-                </p>
-
-                <p className="mt-2 break-words text-sm font-medium">
-                  {project.type}
-                </p>
-              </div>
-
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.13em] text-muted">
-                  Category
-                </p>
-
-                <p className="mt-2 break-words text-sm font-medium">
-                  {project.category}
-                </p>
-              </div>
-
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.13em] text-muted">
-                  Year
-                </p>
-
-                <p className="mt-2 text-sm font-medium">
-                  {project.year}
-                </p>
-              </div>
-            </div>
-
-            {/* TECH STACK PREVIEW */}
-            <div className="mt-7">
-              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                Technologies
-              </p>
-
-              <div className="flex flex-wrap gap-2">
-                {project.tags.slice(0, 6).map((tag) => (
-                  <span
-                    key={tag}
-                    className="border border-border px-3 py-2 font-mono text-[10px] text-foreground"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* ACTIONS */}
-            <div className="mt-10 flex flex-wrap items-center gap-5">
-              <a
-                href="#project-details"
-                className="group inline-flex h-13 items-center gap-8 bg-foreground px-6 text-sm font-medium text-background transition-opacity hover:opacity-85"
-              >
-                Explore Details
-
-                <FiArrowRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-1"
-                />
-              </a>
-
-              <Link
-                href="/projects"
-                className="group inline-flex h-13 items-center gap-3 text-sm font-medium text-muted transition-colors hover:text-foreground"
-              >
-                All Projects
-                <FiArrowUpRight
-                  size={17}
-                  className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-                />
-              </Link>
+            <div className="mt-12 grid border-l border-t border-border sm:grid-cols-3">
+              {[
+                { label: "Type", value: project.type },
+                { label: "Discipline", value: project.category },
+                { label: "Archive", value: project.year },
+              ].map((item, itemIndex) => (
+                <div key={item.label} className="min-h-32 border-b border-r border-border p-5">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.17em] text-accent">
+                    0{itemIndex + 1} / {item.label}
+                  </p>
+                  <p className="mt-5 text-sm font-semibold leading-6">{item.value}</p>
+                </div>
+              ))}
             </div>
           </SiteReveal>
         </section>
 
-        {/* =====================================
-             PROJECT DETAILS — BELOW HERO
-        ====================================== */}
-
-        <div id="project-details" className="scroll-mt-24">
-
-          {/* OVERVIEW */}
-          <SiteReveal>
-            <section className="grid gap-10 border-b border-border py-16 lg:grid-cols-[0.55fr_1fr] lg:gap-20 lg:py-24">
-
-            {/* LEFT */}
-            <div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
-                01 / Overview
-              </span>
-
-              <h2 className="mt-6 text-3xl font-medium leading-tight tracking-[-0.055em] sm:text-5xl">
-                About the
-                <br />
-                project.
-              </h2>
-            </div>
-
-            {/* RIGHT */}
-            <div>
-              <p className="max-w-3xl text-lg leading-9 tracking-[-0.02em] text-foreground sm:text-xl">
-                {project.description}
+        <section className="home-tone-light -mx-5 border-b border-border px-5 py-16 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12 lg:py-24">
+          <div className="mb-12 flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+            <SiteReveal>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                02 / Outcomes
               </p>
+              <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+                What was
+                <br />
+                built<span className="text-accent">.</span>
+              </h2>
+            </SiteReveal>
+            <p className="font-mono text-[9px] uppercase tracking-[0.17em] text-muted">
+              {String(project.highlights.length).padStart(2, "0")} core outcomes
+            </p>
+          </div>
 
-              <div className="mt-10 grid gap-6 border-t border-border pt-7 sm:grid-cols-2">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                    Project Type
-                  </p>
-
-                  <p className="mt-3 text-base font-medium">
-                    {project.type}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                    Category
-                  </p>
-
-                  <p className="mt-3 text-base font-medium">
-                    {project.category}
-                  </p>
-                </div>
-              </div>
-            </div>
-            </section>
-          </SiteReveal>
-
-          {/* =====================================
-              FEATURES
-          ====================================== */}
-
-          <SiteReveal direction="left">
-            <section className="border-b border-border py-16 lg:py-24">
-
-            {/* HEADER */}
-            <div className="mb-12 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
-                  02 / Features
-                </span>
-
-                <h2 className="mt-6 text-3xl font-medium tracking-[-0.055em] sm:text-5xl">
-                  What I built.
-                </h2>
-              </div>
-
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                {String(project.highlights.length).padStart(2, "0")} Highlights
-              </span>
-            </div>
-
-            {/* FEATURE LIST */}
-            <div className="grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2">
-              {project.highlights.map((highlight, index) => (
-                <div
-                  key={`${index}-${highlight}`}
-                  className="group flex min-h-[210px] flex-col justify-between bg-background p-7 transition-colors duration-300 hover:bg-foreground/[0.035] sm:p-8"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] text-accent">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-
-                    <FiCheck
-                      size={18}
-                      className="text-muted transition-colors group-hover:text-accent"
-                    />
-                  </div>
-
-                  <p className="mt-10 max-w-md text-base leading-7 text-foreground sm:text-lg">
+          <div className="border-t border-border">
+            {project.highlights.map((highlight, highlightIndex) => (
+              <SiteReveal
+                key={`${highlightIndex}-${highlight}`}
+                direction={highlightIndex % 2 === 0 ? "right" : "left"}
+                delay={highlightIndex * 0.04}
+              >
+                <article className="group grid gap-5 border-b border-border py-7 sm:grid-cols-[72px_1fr_auto] sm:items-center lg:py-9">
+                  <span className="font-mono text-[10px] text-accent">
+                    {String(highlightIndex + 1).padStart(2, "0")}
+                  </span>
+                  <p className="max-w-5xl font-display text-xl font-semibold leading-tight tracking-[-0.035em] transition-transform duration-300 group-hover:translate-x-2 sm:text-2xl lg:text-3xl">
                     {highlight}
                   </p>
-                </div>
-              ))}
-            </div>
-            </section>
-          </SiteReveal>
+                  <span className="hidden h-3 w-3 rounded-full border-2 border-accent sm:block" />
+                </article>
+              </SiteReveal>
+            ))}
+          </div>
+        </section>
 
-          {/* =====================================
-              TECHNOLOGY STACK
-          ====================================== */}
+        <section className="relative border-b border-border py-16 lg:py-24">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 700 500"
+            fill="none"
+            className="pointer-events-none absolute -right-36 top-1/2 z-0 hidden h-[95%] w-[55%] -translate-y-1/2 lg:block"
+          >
+            <path
+              d="M742 105C576 95 448 133 430 248C412 363 537 421 626 358C715 295 657 192 569 200C481 208 449 316 519 362C589 408 670 352 654 282C638 212 553 196 510 242"
+              stroke="var(--accent)"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
 
-          <SiteReveal direction="right">
-            <section className="grid gap-10 border-b border-border py-16 lg:grid-cols-[0.55fr_1fr] lg:gap-20 lg:py-24">
-
-            {/* LEFT */}
-            <div>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
+          <div className="relative z-10 grid gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+            <SiteReveal direction="left">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
                 03 / Technology
-              </span>
-
-              <h2 className="mt-6 text-3xl font-medium tracking-[-0.055em] sm:text-5xl">
-                Built with.
-              </h2>
-
-              <p className="mt-6 max-w-sm text-sm leading-7 text-muted">
-                The technologies and tools used to bring
-                this project to life.
               </p>
-            </div>
+              <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+                Built
+                <br />
+                with<span className="text-accent">.</span>
+              </h2>
+              <p className="mt-8 max-w-sm text-sm leading-7 text-muted">
+                The tools and technologies used across the interface, application
+                logic and supporting systems.
+              </p>
+            </SiteReveal>
 
-            {/* RIGHT */}
-            <div>
-              <div className="flex items-center justify-between border-b border-border pb-5">
-                <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                  Technology Stack
-                </span>
-
-                <FiCode size={18} className="text-accent" />
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3">
-                {project.tags.map((tag, index) => (
+            <SiteReveal direction="right" delay={0.08}>
+              <div className="grid grid-cols-2 border-l border-t border-border sm:grid-cols-3">
+                {project.tags.map((tag, tagIndex) => (
                   <div
-                    key={`${tag}-${index}`}
-                    className="group flex min-h-[110px] flex-col justify-between border-b border-r border-border p-5 transition-colors hover:bg-foreground/[0.035]"
+                    key={`${tag}-${tagIndex}`}
+                    className="group flex min-h-36 flex-col justify-between border-b border-r border-border bg-background/90 p-5 transition-colors hover:bg-card lg:min-h-44"
                   >
-                    <span className="font-mono text-[10px] text-accent">
-                      {String(index + 1).padStart(2, "0")}
+                    <span className="font-mono text-[9px] text-accent">
+                      {String(tagIndex + 1).padStart(2, "0")}
                     </span>
-
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="break-words text-sm font-medium text-foreground">
-                        {tag}
-                      </p>
-
-                      <FiLayers
-                        size={14}
-                        className="shrink-0 text-muted/40 transition-colors group-hover:text-accent"
-                      />
-                    </div>
+                    <p className="break-words font-display text-base font-bold uppercase tracking-[-0.025em] transition-transform group-hover:-translate-y-1 sm:text-lg">
+                      {tag}
+                    </p>
                   </div>
                 ))}
               </div>
-            </div>
-            </section>
-          </SiteReveal>
+            </SiteReveal>
+          </div>
+        </section>
 
-          {/* =====================================
-              OPTIONAL ARCHITECTURE
-          ====================================== */}
-
-          {diagram && (
+        {diagram && (
+          <section className="home-tone-light -mx-5 border-b border-border px-5 py-16 sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12 lg:py-24">
             <SiteReveal>
-              <section className="border-b border-border py-16 lg:py-24">
-              <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+              <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
                 <div>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
                     04 / Architecture
-                  </span>
-
-                  <h2 className="mt-6 text-3xl font-medium tracking-[-0.055em] sm:text-5xl">
-                    Under the hood.
+                  </p>
+                  <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+                    Under the hood<span className="text-accent">.</span>
                   </h2>
                 </div>
-
-                <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                  Technical Diagram
+                <span className="font-mono text-[9px] uppercase tracking-[0.17em] text-muted">
+                  Technical diagram
                 </span>
               </div>
-
               <div className="relative aspect-[640/312] overflow-hidden border border-border bg-white">
                 <Image
                   src={diagram}
                   alt={`${project.title} architecture diagram`}
                   fill
-                  sizes="(max-width: 1280px) 100vw, 1200px"
+                  sizes="100vw"
                   className="object-contain p-4 sm:p-8"
                 />
               </div>
-              </section>
             </SiteReveal>
-          )}
-        </div>
+          </section>
+        )}
+      </div>
 
-        {/* =====================================
-            PROJECT NAVIGATION
-        ====================================== */}
-
-        <SiteReveal>
-          <nav
-            aria-label="Project navigation"
-            className="grid border-b border-border sm:grid-cols-2"
-          >
-          {/* PREVIOUS */}
-          <div className="border-b border-border sm:border-b-0 sm:border-r">
+      <SiteReveal>
+        <nav aria-label="Project navigation" className="grid border-b border-border lg:grid-cols-2">
+          <div className="border-b border-border lg:border-b-0 lg:border-r">
             {previous ? (
               <Link
                 href={`/projects/${previous.slug}`}
-                className="group flex h-full min-h-[160px] flex-col justify-between p-6 transition-colors hover:bg-foreground/[0.025] sm:p-9"
+                className="group grid min-h-[250px] grid-cols-[1fr_0.72fr] overflow-hidden"
               >
-                <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                  <FiArrowLeft
-                    size={16}
-                    className="transition-transform group-hover:-translate-x-1"
+                <div className="flex flex-col justify-between p-6 sm:p-8">
+                  <span className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.17em] text-muted">
+                    <FiArrowLeft className="transition-transform group-hover:-translate-x-1" size={15} />
+                    Previous
+                  </span>
+                  <span className="font-display text-2xl font-bold uppercase leading-none tracking-[-0.05em] transition-colors group-hover:text-accent sm:text-4xl">
+                    {previous.title}
+                  </span>
+                </div>
+                <div className="relative min-h-full overflow-hidden bg-card">
+                  <Image
+                    src={previous.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 40vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  Previous Project
-                </span>
-
-                <span className="mt-8 text-2xl font-medium tracking-[-0.04em] transition-colors group-hover:text-accent">
-                  {previous.title}
-                </span>
+                </div>
               </Link>
             ) : (
-              <div className="flex min-h-[160px] items-end p-9 text-sm text-muted">
+              <div className="flex min-h-[250px] items-end p-8 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
                 Beginning of archive
               </div>
             )}
           </div>
 
-          {/* NEXT */}
           <div>
             {next ? (
               <Link
                 href={`/projects/${next.slug}`}
-                className="group flex h-full min-h-[160px] flex-col items-end justify-between p-6 text-right transition-colors hover:bg-foreground/[0.025] sm:p-9"
+                className="group grid min-h-[250px] grid-cols-[0.72fr_1fr] overflow-hidden"
               >
-                <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                  Next Project
-
-                  <FiArrowRight
-                    size={16}
-                    className="transition-transform group-hover:translate-x-1"
+                <div className="relative min-h-full overflow-hidden bg-card">
+                  <Image
+                    src={next.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 40vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                </span>
-
-                <span className="mt-8 text-2xl font-medium tracking-[-0.04em] transition-colors group-hover:text-accent">
-                  {next.title}
-                </span>
+                </div>
+                <div className="flex flex-col items-end justify-between p-6 text-right sm:p-8">
+                  <span className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.17em] text-muted">
+                    Next
+                    <FiArrowRight className="transition-transform group-hover:translate-x-1" size={15} />
+                  </span>
+                  <span className="font-display text-2xl font-bold uppercase leading-none tracking-[-0.05em] transition-colors group-hover:text-accent sm:text-4xl">
+                    {next.title}
+                  </span>
+                </div>
               </Link>
             ) : (
-              <div className="flex min-h-[160px] items-end justify-end p-9 text-sm text-muted">
+              <div className="flex min-h-[250px] items-end justify-end p-8 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
                 End of archive
               </div>
             )}
           </div>
-          </nav>
-        </SiteReveal>
+        </nav>
+      </SiteReveal>
 
-        {/* =====================================
-            FINAL CTA
-        ====================================== */}
-
-        <SiteReveal>
-          <section className="flex flex-col justify-between gap-8 py-16 lg:flex-row lg:items-end">
-          <div>
-            <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.17em] text-accent">
-              Next Collaboration
-            </p>
-
-            <h2 className="text-3xl font-medium tracking-[-0.055em] sm:text-5xl">
-              Have a project in mind?
-            </h2>
-
-            <p className="mt-5 max-w-lg text-sm leading-7 text-muted">
-              I&apos;m open to interesting projects, collaborations,
-              and new development opportunities.
-            </p>
+      <section className="py-8">
+        <div className="relative overflow-hidden bg-accent px-6 py-12 text-[#090909] sm:px-10 sm:py-16 lg:px-14 lg:py-20">
+          <div className="pointer-events-none absolute -right-8 -top-20 font-display text-[18rem] font-black leading-none text-black/[0.06] sm:text-[24rem]">
+            +
           </div>
-
-          <Link
-            href="/contact"
-            className="group inline-flex h-14 w-fit items-center gap-8 bg-foreground px-6 text-sm font-medium text-background transition-opacity hover:opacity-85"
-          >
-            Let&apos;s work together
-
-            <FiArrowUpRight
-              size={18}
-              className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-            />
-          </Link>
-          </section>
-        </SiteReveal>
-      </div>
+          <div className="relative flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em]">
+                Next collaboration
+              </p>
+              <h2 className="mt-7 font-display text-[clamp(3.2rem,7vw,7.2rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
+                Have something
+                <br />
+                worth building?
+              </h2>
+            </div>
+            <Link
+              href="/contact"
+              className="group inline-flex h-14 w-fit items-center gap-12 bg-[#090909] px-6 text-sm font-semibold text-[#f2efe7] transition-transform hover:-translate-y-1"
+            >
+              Start a conversation
+              <FiArrowUpRight className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" size={19} />
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

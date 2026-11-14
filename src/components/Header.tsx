@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import Nav from "./Nav";
 import MobileNav from "./MobileNav";
 import BrandLogo from "./MyLogo";
-import ModeSwitch from "./ModeSwitch";
 
 export default function Header() {
   return (
@@ -54,7 +53,6 @@ export default function Header() {
           <div className="hidden items-center xl:flex">
             <Nav />
           </div>
-
           {/* MOBILE NAVIGATION */}
           <div className="flex items-center xl:hidden">
             <MobileNav />

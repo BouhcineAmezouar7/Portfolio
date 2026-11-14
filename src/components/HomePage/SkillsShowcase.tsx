@@ -19,23 +19,23 @@ import {
   SiPrisma,
   SiRabbitmq,
   SiLinux,
-  SiC,
-  SiCplusplus,
-  SiPhp,
   SiSqlite,
-  SiVercel,
+  SiSupabase,
+  SiBetterauth,
+  SiResend,
 } from "react-icons/si";
-import { FiArrowUpRight } from "react-icons/fi";
+import { FiArrowUpRight, FiServer, FiShare2 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { revealUp, siteEase as homeEase, siteViewport as homeViewport } from "@/lib/site-motion";
+import { technicalSkills } from "@/data/portfolio";
 
 type Category =
   | "All"
   | "Frontend"
   | "Backend"
-  | "Languages"
   | "Database"
-  | "Tools";
+  | "Tools"
+  | "Additional";
 
 type Skill = {
   name: string;
@@ -44,137 +44,38 @@ type Skill = {
   description: string;
 };
 
-const skills: Skill[] = [
-  {
-    name: "React",
-    icon: SiReact,
-    category: "Frontend",
-    description: "UI library",
-  },
-  {
-    name: "Next.js",
-    icon: SiNextdotjs,
-    category: "Frontend",
-    description: "React framework",
-  },
-  {
-    name: "TypeScript",
-    icon: SiTypescript,
-    category: "Languages",
-    description: "Typed JavaScript",
-  },
-  {
-    name: "JavaScript",
-    icon: SiJavascript,
-    category: "Languages",
-    description: "Programming language",
-  },
-  {
-    name: "C",
-    icon: SiC,
-    category: "Languages",
-    description: "Systems programming",
-  },
-  {
-    name: "C++",
-    icon: SiCplusplus,
-    category: "Languages",
-    description: "Systems programming",
-  },
-  {
-    name: "PHP",
-    icon: SiPhp,
-    category: "Languages",
-    description: "Backend language",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: SiTailwindcss,
-    category: "Frontend",
-    description: "Utility-first CSS",
-  },
-  {
-    name: "NestJS",
-    icon: SiNestjs,
-    category: "Backend",
-    description: "Node.js framework",
-  },
-  {
-    name: "PostgreSQL",
-    icon: SiPostgresql,
-    category: "Database",
-    description: "Relational database",
-  },
-  {
-    name: "Prisma",
-    icon: SiPrisma,
-    category: "Database",
-    description: "Database ORM",
-  },
-  {
-    name: "MySQL",
-    icon: SiMysql,
-    category: "Database",
-    description: "Relational database",
-  },
-  {
-    name: "SQLite",
-    icon: SiSqlite,
-    category: "Database",
-    description: "Embedded database",
-  },
-  {
-    name: "Docker",
-    icon: SiDocker,
-    category: "Tools",
-    description: "Containerization",
-  },
-  {
-    name: "Git",
-    icon: SiGit,
-    category: "Tools",
-    description: "Version control",
-  },
-  {
-    name: "Laravel",
-    icon: SiLaravel,
-    category: "Backend",
-    description: "PHP framework",
-  },
-  {
-    name: "RabbitMQ",
-    icon: SiRabbitmq,
-    category: "Tools",
-    description: "Message broker",
-  },
-  {
-    name: "Linux",
-    icon: SiLinux,
-    category: "Tools",
-    description: "Development environment",
-  },
-  {
-    name: "Vercel",
-    icon: SiVercel,
-    category: "Tools",
-    description: "Web deployment",
-  },
-  {
-    name: "HTML5",
-    icon: SiHtml5,
-    category: "Frontend",
-    description: "Markup language",
-  },
-  {
-    name: "CSS3",
-    icon: SiCss,
-    category: "Frontend",
-    description: "Styling language",
-  },
-];
+const skillIcons: Record<string, IconType> = {
+  "Next.js": SiNextdotjs,
+  "React.js": SiReact,
+  TypeScript: SiTypescript,
+  JavaScript: SiJavascript,
+  "Tailwind CSS": SiTailwindcss,
+  HTML5: SiHtml5,
+  CSS: SiCss,
+  NestJS: SiNestjs,
+  Laravel: SiLaravel,
+  "REST APIs": FiServer,
+  Microservices: FiShare2,
+  PostgreSQL: SiPostgresql,
+  MySQL: SiMysql,
+  SQLite: SiSqlite,
+  Prisma: SiPrisma,
+  Docker: SiDocker,
+  Git: SiGit,
+  Linux: SiLinux,
+  RabbitMQ: SiRabbitmq,
+  Supabase: SiSupabase,
+  "Better Auth": SiBetterauth,
+  Resend: SiResend,
+};
+
+const skills: Skill[] = technicalSkills.map((skill) => ({
+  ...skill,
+  icon: skillIcons[skill.name] ?? FiServer,
+}));
 
 const skillColors: Record<string, { light: string; dark: string }> = {
-  React: { light: "#087ea4", dark: "#61dafb" },
+  "React.js": { light: "#087ea4", dark: "#61dafb" },
   "Next.js": { light: "#111827", dark: "#f8fafc" },
   TypeScript: { light: "#3178c6", dark: "#60a5d8" },
   JavaScript: { light: "#b38f00", dark: "#f7df1e" },
@@ -186,26 +87,23 @@ const skillColors: Record<string, { light: string; dark: string }> = {
   Docker: { light: "#1473e6", dark: "#60aef5" },
   Git: { light: "#e44d2e", dark: "#ff765b" },
   Laravel: { light: "#e6291e", dark: "#ff6b63" },
-  "Node.js": { light: "#3c873a", dark: "#72b95f" },
   RabbitMQ: { light: "#e85d00", dark: "#ff8a3d" },
   Linux: { light: "#3b4252", dark: "#facc15" },
   HTML5: { light: "#d94820", dark: "#ff704d" },
   CSS3: { light: "#1565b5", dark: "#58a6e7" },
-  C: { light: "#3949ab", dark: "#7f8de1" },
-  "C++": { light: "#00599c", dark: "#659ad2" },
-  PHP: { light: "#4f5b93", dark: "#8892bf" },
-  "Express.js": { light: "#303030", dark: "#f0f0f0" },
   SQLite: { light: "#0f80cc", dark: "#58b4e8" },
-  Vercel: { light: "#111827", dark: "#f8fafc" },
+  Supabase: { light: "#168f63", dark: "#3ecf8e" },
+  "Better Auth": { light: "#111827", dark: "#f8fafc" },
+  Resend: { light: "#111827", dark: "#f8fafc" },
 };
 
 const categories: Category[] = [
   "All",
   "Frontend",
   "Backend",
-  "Languages",
   "Database",
   "Tools",
+  "Additional",
 ];
 
 const categoryCounts = categories.reduce(
