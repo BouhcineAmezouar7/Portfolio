@@ -240,7 +240,7 @@ export const experiences = [
     number: "03",
     title: "Web Development / Database Intern",
     company: "NetoneMaroc",
-    period: "Internship · 4 months",
+    period: "Internship · 3 months",
     description:
       "Managed and organized application data and designed frontend interfaces for viewing and interacting with structured database information.",
     achievements: [
@@ -255,7 +255,7 @@ export const experiences = [
     number: "04",
     title: "Digital Development — Web Full Stack",
     company: "OFPPT — CFPM Sidi Moumen",
-    period: "Graduated 2024",
+    period: "Graduated 2023",
     description:
       "Specialized training in full-stack web development, frontend and backend development, databases, and web application architecture in Casablanca.",
     achievements: [
@@ -270,7 +270,7 @@ export const experiences = [
     number: "05",
     title: "Baccalaureate — Life and Earth Sciences",
     company: "Morocco",
-    period: "2022",
+    period: "2021",
     description:
       "Baccalaureate in Life and Earth Sciences (SVT).",
     achievements: [],

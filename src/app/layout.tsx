@@ -26,10 +26,17 @@ export const metadata: Metadata = {
   title: `${profile.name} — ${profile.role}`,
   description: `Portfolio of ${profile.name}, a ${profile.role} based in ${profile.location} and currently studying at ${profile.school}.`,
   icons: {
-    icon: "/logo/logo_icon_white.png",
+    icon: [
+      {
+        url: "/logo/logo_icon_black.png",
+        sizes: "any",
+        type: "image/png",
+      },
+    ],
+    shortcut: "/logo/logo_icon_black.png",
+    apple: "/logo/logo_icon_black.png",
   },
 };
-
 
 export default function RootLayout({
   children,
@@ -37,16 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className="scroll-smooth"
-      suppressHydrationWarning
-    >
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d)}catch(e){}})()`,
