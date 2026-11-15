@@ -54,7 +54,7 @@ export default async function ProjectDetailPage({
               href="/projects"
               className="group col-start-1 row-start-1 flex min-w-0 items-center gap-3 border-r border-border pr-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground sm:col-start-auto sm:row-start-auto sm:pr-5 sm:text-[10px]"
             >
-              <span className="flex h-8 w-8 items-center justify-center border border-border transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
+              <span className="flex h-11 w-11 items-center justify-center border border-border transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
                 <FiArrowLeft
                   className="transition-transform group-hover:-translate-x-0.5"
                   size={14}
@@ -87,7 +87,7 @@ export default async function ProjectDetailPage({
               <span className="h-px w-12 bg-accent/70" />
             </div>
 
-            <h1 className="my-14 max-w-[11ch] break-words font-display text-[clamp(4.2rem,12vw,12.5rem)] font-black uppercase leading-[0.72] tracking-[-0.085em] sm:my-16">
+            <h1 className="my-12 max-w-[11ch] break-words font-display text-[clamp(3.1rem,12vw,12.5rem)] font-black uppercase leading-[0.72] tracking-[-0.085em] min-[380px]:text-[clamp(3.6rem,12vw,12.5rem)] sm:my-16">
               {project.title}
               <span className="text-accent">.</span>
             </h1>
@@ -98,10 +98,10 @@ export default async function ProjectDetailPage({
               </p>
               <a
                 href="#case-study"
-                className="group inline-flex w-fit items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground"
+                className="group inline-flex min-h-11 w-fit items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground"
               >
                 View case study
-                <span className="flex h-9 w-9 items-center justify-center border border-border text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
+                <span className="flex h-11 w-11 items-center justify-center border border-border text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
                   <FiArrowDown size={14} />
                 </span>
               </a>
@@ -167,7 +167,7 @@ export default async function ProjectDetailPage({
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               01 / The build
             </p>
-            <h2 className="mt-7 font-display text-[clamp(3.6rem,7vw,7.5rem)] font-black uppercase leading-[0.8] tracking-[-0.07em]">
+            <h2 className="mt-7 font-display text-[clamp(2.8rem,7vw,7.5rem)] font-black uppercase leading-[0.8] tracking-[-0.07em]">
               Project
               <br />
               scope<span className="text-accent">.</span>
@@ -201,7 +201,7 @@ export default async function ProjectDetailPage({
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
                 02 / Outcomes
               </p>
-              <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+              <h2 className="mt-7 font-display text-[clamp(2.75rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
                 What was
                 <br />
                 built<span className="text-accent">.</span>
@@ -253,7 +253,7 @@ export default async function ProjectDetailPage({
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
                 03 / Technology
               </p>
-              <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+              <h2 className="mt-7 font-display text-[clamp(2.75rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
                 Built
                 <br />
                 with<span className="text-accent">.</span>
@@ -292,7 +292,7 @@ export default async function ProjectDetailPage({
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
                     04 / Architecture
                   </p>
-                  <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+                  <h2 className="mt-7 font-display text-[clamp(2.75rem,7vw,7rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
                     Under the hood<span className="text-accent">.</span>
                   </h2>
                 </div>
@@ -320,7 +320,7 @@ export default async function ProjectDetailPage({
             {previous ? (
               <Link
                 href={`/projects/${previous.slug}`}
-                className="group grid min-h-[250px] grid-cols-[1fr_0.72fr] overflow-hidden"
+                className="group grid min-h-[210px] grid-cols-[1fr_0.72fr] overflow-hidden sm:min-h-[250px]"
               >
                 <div className="flex flex-col justify-between p-6 sm:p-8">
                   <span className="flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.17em] text-muted">
@@ -342,7 +342,7 @@ export default async function ProjectDetailPage({
                 </div>
               </Link>
             ) : (
-              <div className="flex min-h-[250px] items-end p-8 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+              <div className="flex min-h-[210px] items-end p-6 font-mono text-[10px] uppercase tracking-[0.16em] text-muted sm:min-h-[250px] sm:p-8">
                 Beginning of archive
               </div>
             )}
@@ -352,7 +352,7 @@ export default async function ProjectDetailPage({
             {next ? (
               <Link
                 href={`/projects/${next.slug}`}
-                className="group grid min-h-[250px] grid-cols-[0.72fr_1fr] overflow-hidden"
+                className="group grid min-h-[210px] grid-cols-[0.72fr_1fr] overflow-hidden sm:min-h-[250px]"
               >
                 <div className="relative min-h-full overflow-hidden bg-card">
                   <Image
@@ -374,7 +374,7 @@ export default async function ProjectDetailPage({
                 </div>
               </Link>
             ) : (
-              <div className="flex min-h-[250px] items-end justify-end p-8 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+              <div className="flex min-h-[210px] items-end justify-end p-6 font-mono text-[10px] uppercase tracking-[0.16em] text-muted sm:min-h-[250px] sm:p-8">
                 End of archive
               </div>
             )}
@@ -392,7 +392,7 @@ export default async function ProjectDetailPage({
               <p className="font-mono text-[10px] uppercase tracking-[0.2em]">
                 Next collaboration
               </p>
-              <h2 className="mt-7 font-display text-[clamp(3.2rem,7vw,7.2rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
+              <h2 className="mt-7 font-display text-[clamp(2.6rem,7vw,7.2rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
                 Have something
                 <br />
                 worth building?
@@ -400,7 +400,7 @@ export default async function ProjectDetailPage({
             </div>
             <Link
               href="/contact"
-              className="group inline-flex h-14 w-fit items-center gap-12 bg-[#090909] px-6 text-sm font-semibold text-[#f2efe7] transition-transform hover:-translate-y-1"
+              className="group inline-flex h-14 w-full items-center justify-between gap-5 bg-[#090909] px-6 text-sm font-semibold text-[#f2efe7] transition-transform hover:-translate-y-1 sm:w-fit sm:gap-12"
             >
               Start a conversation
               <FiArrowUpRight className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" size={19} />

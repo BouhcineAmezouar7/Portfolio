@@ -23,7 +23,7 @@ export default function ProjectsPage() {
 
   return (
     <main className="home-tone-dark relative min-h-screen overflow-hidden px-5 pb-8 text-foreground sm:px-8 lg:px-12">
-      <section className="relative min-h-[720px] border-b border-border py-10 sm:py-14 lg:min-h-[800px] lg:py-16">
+      <section className="relative min-h-[600px] border-b border-border py-8 sm:min-h-[720px] sm:py-14 lg:min-h-[800px] lg:py-16">
         {/* ABSTRACT INFINITY RIBBON */}
 
         <motion.svg
@@ -75,7 +75,7 @@ export default function ProjectsPage() {
           />
         </motion.svg>
 
-        <div className="relative z-10 grid min-h-[620px] w-[calc(100vw-2.5rem)] min-w-0 items-end gap-12 pt-16 sm:w-full lg:grid-cols-[1.35fr_0.65fr] lg:pt-24">
+        <div className="relative z-10 grid min-h-[500px] w-full min-w-0 items-end gap-10 pt-12 sm:min-h-[620px] sm:gap-12 sm:pt-16 lg:grid-cols-[1.35fr_0.65fr] lg:pt-24">
           <motion.div
             initial={{ opacity: 0, y: 42 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ export default function ProjectsPage() {
               <span className="h-px w-10 bg-accent" />
               Products · systems · experiments
             </p>
-            <h1 className="font-display text-[clamp(4.4rem,12vw,11.5rem)] font-black uppercase leading-[0.75] tracking-[-0.08em]">
+            <h1 className="font-display text-[clamp(3.4rem,12vw,11.5rem)] font-black uppercase leading-[0.75] tracking-[-0.08em] min-[380px]:text-[clamp(3.9rem,12vw,11.5rem)]">
               Work
               <br />
               index<span className="text-accent">.</span>
@@ -96,7 +96,7 @@ export default function ProjectsPage() {
             initial={{ opacity: 0, x: 28 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.22, ease: siteEase }}
-            className="min-w-0 max-w-full border-l border-border pl-6 lg:mb-3 lg:justify-self-end"
+            className="min-w-0 max-w-full border-l border-border pl-4 sm:pl-6 lg:mb-3 lg:justify-self-end"
           >
             <p className="max-w-md break-words text-sm leading-7 text-muted sm:text-lg sm:leading-8">
               Full-stack products, low-level systems and infrastructure
@@ -137,7 +137,7 @@ export default function ProjectsPage() {
                   type="button"
                   onClick={() => changeFilter(filter)}
                   aria-pressed={active}
-                  className={`group flex items-center gap-3 border px-4 py-2.5 font-mono text-[9px] uppercase tracking-[0.12em] transition-colors sm:text-[10px] ${
+                  className={`group flex min-h-11 items-center gap-3 border px-4 py-2.5 font-mono text-[9px] uppercase tracking-[0.12em] transition-colors sm:text-[10px] ${
                     active
                       ? "border-accent bg-accent text-[#090909]"
                       : "border-border text-muted hover:border-accent hover:text-accent"
@@ -173,12 +173,12 @@ export default function ProjectsPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.7, ease: siteEase }}
-                  className="relative grid min-h-[640px] overflow-hidden border-b border-border py-10 lg:grid-cols-2 lg:gap-12 lg:py-14 xl:min-h-[720px]"
+                  className="relative grid min-h-0 overflow-hidden border-b border-border py-10 sm:min-h-[640px] lg:grid-cols-2 lg:gap-12 lg:py-14 xl:min-h-[720px]"
                 >
                   <Link
                     href={`/projects/${project.slug}`}
                     aria-label={`View ${project.title} project`}
-                    className={`group/image relative z-10 min-h-[340px] overflow-hidden bg-card lg:min-h-0 ${
+                    className={`group/image relative z-10 min-h-[260px] overflow-hidden bg-card sm:min-h-[340px] lg:min-h-0 ${
                       imageOnRight ? "lg:order-2" : ""
                     }`}
                   >
@@ -209,14 +209,14 @@ export default function ProjectsPage() {
                     </div>
 
                     <div className="py-10 lg:py-0">
-                      <span className="font-display text-[clamp(4rem,8vw,8rem)] font-black leading-none tracking-[-0.07em] text-white/[0.055]">
+                      <span className="font-display text-[clamp(3.25rem,8vw,8rem)] font-black leading-none tracking-[-0.07em] text-white/[0.055]">
                         {project.number}
                       </span>
                       <Link
                         href={`/projects/${project.slug}`}
                         className="group/title block"
                       >
-                        <h2 className="-mt-7 max-w-2xl font-display text-[clamp(2.8rem,5.8vw,6.3rem)] font-black uppercase leading-[0.84] tracking-[-0.065em] transition-colors duration-300 group-hover/title:text-accent lg:-mt-10">
+                        <h2 className="-mt-7 max-w-2xl font-display text-[clamp(2.35rem,5.8vw,6.3rem)] font-black uppercase leading-[0.84] tracking-[-0.065em] transition-colors duration-300 group-hover/title:text-accent lg:-mt-10">
                           {project.title}
                           <span className="text-accent">.</span>
                         </h2>
@@ -282,7 +282,7 @@ export default function ProjectsPage() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff3b1f]">
                 New project / New conversation
               </p>
-              <h2 className="mt-7 font-display text-[clamp(3.2rem,7vw,7.2rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
+              <h2 className="mt-7 font-display text-[clamp(2.6rem,7vw,7.2rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
                 Have something
                 <br />
                 worth building?
@@ -290,7 +290,7 @@ export default function ProjectsPage() {
             </div>
             <Link
               href="/contact"
-              className="group inline-flex h-14 w-fit items-center gap-12 bg-[#ff3b1f] px-6 text-sm font-semibold text-[#090909] transition-transform hover:-translate-y-1"
+              className="group inline-flex h-14 w-full items-center justify-between gap-5 bg-[#ff3b1f] px-6 text-sm font-semibold text-[#090909] transition-transform hover:-translate-y-1 sm:w-fit sm:gap-12"
             >
               Start a conversation
               <FiArrowUpRight

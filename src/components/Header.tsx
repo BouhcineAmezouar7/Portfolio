@@ -18,7 +18,7 @@ export default function Header() {
           duration: 0.65,
           ease: [0.22, 1, 0.36, 1],
         }}
-        className="flex h-20 w-full items-center justify-between gap-6 px-5 sm:px-8 lg:px-12"
+        className="flex h-16 w-full items-center justify-between gap-4 px-4 min-[380px]:px-5 sm:h-20 sm:gap-6 sm:px-8 lg:px-12"
       >
         {/* LEFT — LOGO & IDENTITY */}
         <div className="flex min-w-0 items-center gap-5">

@@ -72,15 +72,15 @@ export default function CTASection() {
               transition={{ duration: 0.72, delay: 0.28, ease: homeEase }}
               className="flex flex-col gap-3 sm:flex-row"
             >
-              <Link href="/contact">
+              <Link href="/contact" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.98 }}
                   className="
-                    group flex h-16
-                    min-w-[200px]
+                    group flex h-14 w-full
+                    sm:h-16 sm:min-w-[200px]
                     items-center justify-between
-                    gap-10
+                    gap-5 sm:gap-10
                     bg-foreground
                     px-6
                     text-sm font-semibold
@@ -124,7 +124,7 @@ export default function CTASection() {
                 rel="noopener noreferrer"
                 aria-label="GitHub"
                 className="
-                  flex h-10 w-10
+                  flex h-11 w-11
                   items-center justify-center
                   border border-border
                   text-muted
@@ -143,7 +143,7 @@ export default function CTASection() {
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 className="
-                  flex h-10 w-10
+                  flex h-11 w-11
                   items-center justify-center
                   border border-border
                   text-muted
@@ -160,7 +160,7 @@ export default function CTASection() {
                 href={socialLinks[2].href}
                 aria-label="Email"
                 className="
-                  flex h-10 w-10
+                  flex h-11 w-11
                   items-center justify-center
                   border border-border
                   text-muted

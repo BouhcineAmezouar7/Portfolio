@@ -99,7 +99,7 @@ export default function ProjectsSection() {
 
         <Link
           href="/projects"
-          className="group flex h-12 items-center justify-between gap-9 bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-85"
+          className="group flex h-12 w-full items-center justify-between gap-9 bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-85 sm:w-auto"
         >
           All Projects
           <FiArrowUpRight

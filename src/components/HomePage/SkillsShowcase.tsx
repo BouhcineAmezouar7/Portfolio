@@ -26,7 +26,11 @@ import {
 } from "react-icons/si";
 import { FiArrowUpRight, FiServer, FiShare2 } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { revealUp, siteEase as homeEase, siteViewport as homeViewport } from "@/lib/site-motion";
+import {
+  revealUp,
+  siteEase as homeEase,
+  siteViewport as homeViewport,
+} from "@/lib/site-motion";
 import { technicalSkills } from "@/data/portfolio";
 
 type Category =
@@ -146,7 +150,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
         ease: homeEase,
       }}
       style={colorVariables}
-      className="skill-card group relative flex min-h-[205px] flex-col justify-between overflow-hidden border border-border bg-background p-5 transition-colors duration-300 sm:min-h-[230px] sm:p-6"
+      className="skill-card group relative flex min-h-[185px] flex-col justify-between overflow-hidden border border-border bg-background p-4 transition-colors duration-300 min-[380px]:min-h-[205px] min-[380px]:p-5 sm:min-h-[230px] sm:p-6"
     >
       {/* BACKGROUND ICON */}
       <div className="skill-icon-wash pointer-events-none absolute -bottom-7 -right-6 text-[130px] opacity-[0.055] transition-transform duration-700 group-hover:-translate-x-3 group-hover:-translate-y-3 group-hover:rotate-[-12deg]">
@@ -159,7 +163,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        <div className="skill-card-arrow flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted transition-all duration-300">
+        <div className="skill-card-arrow flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-all duration-300">
           <FiArrowUpRight size={14} />
         </div>
       </div>
@@ -187,7 +191,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
               {skill.name}
             </h3>
 
-            <p className="mt-1 text-[11px] text-muted">{skill.description}</p>
+            <p className="mt-1 hidden text-[11px] text-muted min-[380px]:block">{skill.description}</p>
           </div>
 
           <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.1em] text-muted">
@@ -241,7 +245,7 @@ function CategoryFilters({
               type="button"
               onClick={() => onCategoryChange(category)}
               aria-pressed={isActive}
-              className={`group relative flex shrink-0 items-center gap-2 whitespace-nowrap pb-5 pt-2 font-mono text-[11px] transition-colors duration-300 ${
+              className={`group relative flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap py-2 font-mono text-[11px] transition-colors duration-300 ${
                 isActive
                   ? "text-foreground"
                   : "text-muted hover:text-foreground"
@@ -332,7 +336,9 @@ export default function SkillsShowcase() {
             <div className="home-scroll-title home-thread-target">
               <h2 className="home-section-title">
                 <span className="home-title-line">SKILLS &amp;</span>
-                <span className="home-title-line text-accent">TECHNOLOGIES.</span>
+                <span className="home-title-line text-accent">
+                  TECHNOLOGIES.
+                </span>
               </h2>
             </div>
           </div>
@@ -362,7 +368,7 @@ export default function SkillsShowcase() {
 
           <motion.div
             layout
-            className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4"
+            className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:gap-3 xl:grid-cols-4"
           >
             <AnimatePresence mode="popLayout">
               {filteredSkills.map((skill, index) => (

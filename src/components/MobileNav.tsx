@@ -46,7 +46,7 @@ export default function MobileNav() {
           whileTap={{ scale: 0.95 }}
           type="button"
           aria-label="Open navigation menu"
-          className="flex h-10 w-10 items-center justify-center border border-border bg-transparent text-foreground transition-colors hover:border-accent hover:text-accent"
+          className="flex h-11 w-11 items-center justify-center border border-border bg-transparent text-foreground transition-colors hover:border-accent hover:text-accent"
         >
           <FiMenu size={18} aria-hidden="true" />
         </motion.button>
@@ -62,7 +62,7 @@ export default function MobileNav() {
           Navigate to a portfolio page.
         </SheetDescription>
 
-        <div className="flex h-20 shrink-0 items-center justify-between border-b border-border px-5 sm:px-7">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-4 min-[380px]:px-5 sm:h-20 sm:px-7">
           <Link
             href="/"
             onClick={() => setOpen(false)}
@@ -79,14 +79,14 @@ export default function MobileNav() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close navigation menu"
-              className="flex h-10 w-10 items-center justify-center border border-border text-foreground transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground"
+              className="flex h-11 w-11 items-center justify-center border border-border text-foreground transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground"
             >
               <FiX size={18} aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-b border-border px-5 py-4 font-mono text-[9px] uppercase tracking-[0.2em] text-muted sm:px-7">
+        <div className="flex items-center justify-between border-b border-border px-4 py-3 font-mono text-[9px] uppercase tracking-[0.16em] text-muted min-[380px]:px-5 sm:px-7 sm:py-4 sm:tracking-[0.2em]">
           <span>Navigation index</span>
           <span className="text-accent">01 — 04</span>
         </div>
@@ -111,20 +111,20 @@ export default function MobileNav() {
                   href={link.href}
                   onClick={() => setOpen(false)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`group grid min-h-[92px] w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 border-b border-border px-5 transition-colors sm:min-h-[108px] sm:grid-cols-[2.75rem_1fr_auto] sm:px-7 ${
+                  className={`group grid min-h-[78px] w-full grid-cols-[1.8rem_1fr_auto] items-center gap-2 border-b border-border px-4 transition-colors min-[380px]:min-h-[88px] min-[380px]:grid-cols-[2.25rem_1fr_auto] min-[380px]:gap-3 min-[380px]:px-5 sm:min-h-[104px] sm:grid-cols-[2.75rem_1fr_auto] sm:px-7 ${
                     isActive
                       ? "bg-accent text-accent-foreground"
                       : "text-foreground hover:bg-foreground hover:text-background"
                   }`}
                 >
                   <span
-                    className={`self-start pt-6 font-mono text-[9px] tracking-[0.16em] sm:pt-7 ${
+                    className={`self-start pt-5 font-mono text-[9px] tracking-[0.16em] min-[380px]:pt-6 sm:pt-7 ${
                       isActive ? "text-black/60" : "text-muted"
                     }`}
                   >
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="font-display text-[clamp(2.25rem,11vw,3.5rem)] font-black uppercase leading-none tracking-[-0.065em]">
+                  <span className="font-display text-[clamp(1.9rem,10.5vw,3.5rem)] font-black uppercase leading-none tracking-[-0.065em] min-[380px]:text-[clamp(2.2rem,11vw,3.5rem)]">
                     {link.name}
                   </span>
                   <FiArrowUpRight
@@ -140,7 +140,7 @@ export default function MobileNav() {
           })}
         </nav>
 
-        <div className="mt-auto border-t border-border p-5 sm:p-7">
+        <div className="mt-auto border-t border-border p-4 min-[380px]:p-5 sm:p-7">
           <button
             type="button"
             onClick={() => {

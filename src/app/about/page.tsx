@@ -118,7 +118,7 @@ export default function AboutPage() {
           </motion.svg>
         </div>
 
-        <div className="relative z-10 grid min-h-[610px] items-end gap-12 pt-16 lg:grid-cols-[1.35fr_0.65fr] lg:pt-24">
+        <div className="relative z-10 grid min-h-[540px] items-end gap-10 pt-12 sm:min-h-[610px] sm:gap-12 sm:pt-16 lg:grid-cols-[1.35fr_0.65fr] lg:pt-24">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -128,7 +128,7 @@ export default function AboutPage() {
               <span className="h-px w-10 bg-accent" />
               The person behind the work
             </p>
-            <h1 className="font-display text-[clamp(4rem,10.5vw,10.5rem)] font-black uppercase leading-[0.77] tracking-[-0.075em]">
+            <h1 className="font-display text-[clamp(3.1rem,10.5vw,10.5rem)] font-black uppercase leading-[0.77] tracking-[-0.075em] min-[380px]:text-[clamp(3.6rem,10.5vw,10.5rem)]">
               Human
               <br />
               behind
@@ -141,7 +141,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, x: 28 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.75, delay: 0.2, ease }}
-            className="max-w-md border-l border-border pl-6 lg:mb-4 lg:justify-self-end"
+            className="max-w-md border-l border-border pl-4 sm:pl-6 lg:mb-4 lg:justify-self-end"
           >
             <p className="text-lg font-medium leading-relaxed sm:text-xl">
               I build digital products where clear thinking, useful design and
@@ -171,7 +171,7 @@ export default function AboutPage() {
           {/* RIGHT — SCROLL INDICATOR */}
           <motion.a
             href="#story"
-            className="group inline-flex w-fit items-center gap-5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground"
+            className="group inline-flex min-h-11 w-fit items-center gap-4 font-mono text-[10px] uppercase tracking-[0.12em] text-muted transition-colors hover:text-foreground sm:gap-5 sm:tracking-[0.15em]"
           >
             Scroll To Read The Story
             <motion.span
@@ -195,7 +195,7 @@ export default function AboutPage() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.75, ease }}
-          className="relative min-h-[560px] overflow-hidden bg-[#090909] lg:min-h-[760px]"
+          className="relative min-h-[420px] overflow-hidden bg-[#090909] sm:min-h-[560px] lg:min-h-[760px]"
         >
           <Image
             src="/my_images/meme.png"
@@ -231,7 +231,7 @@ export default function AboutPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               01 / Profile
             </p>
-            <h2 className="mt-8 max-w-4xl font-display text-[clamp(2.5rem,5vw,5.5rem)] font-black uppercase leading-[0.91] tracking-[-0.055em]">
+            <h2 className="mt-8 max-w-4xl font-display text-[clamp(2.2rem,5vw,5.5rem)] font-black uppercase leading-[0.91] tracking-[-0.055em] min-[380px]:text-[clamp(2.5rem,5vw,5.5rem)]">
               Complex ideas.
               <br />
               Simple digital
@@ -250,7 +250,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mt-10 grid grid-cols-2 border-l border-t border-border">
+            <div className="mt-10 grid grid-cols-1 border-l border-t border-border min-[420px]:grid-cols-2">
               {facts.map((fact, index) => (
                 <div
                   key={fact.label}
@@ -267,18 +267,18 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a
               href={profile.resumePath}
               download
-              className="group inline-flex h-12 items-center gap-10 bg-foreground px-5 text-sm font-semibold text-background transition-colors hover:bg-accent"
+              className="group inline-flex h-12 w-full items-center justify-between gap-4 bg-foreground px-5 text-sm font-semibold text-background transition-colors hover:bg-accent sm:w-auto sm:gap-10"
             >
               Download CV
               <FiDownload size={17} />
             </a>
             <Link
               href="/projects"
-              className="group inline-flex h-12 items-center gap-10 border border-border px-5 text-sm font-semibold transition-colors hover:border-accent hover:text-accent"
+              className="group inline-flex h-12 w-full items-center justify-between gap-4 border border-border px-5 text-sm font-semibold transition-colors hover:border-accent hover:text-accent sm:w-auto sm:gap-10"
             >
               View projects
               <FiArrowUpRight size={17} />
@@ -292,7 +292,7 @@ export default function AboutPage() {
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
             02 / Principles
           </p>
-          <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7.5rem)] font-black uppercase leading-[0.8] tracking-[-0.065em]">
+          <h2 className="mt-7 font-display text-[clamp(2.75rem,7vw,7.5rem)] font-black uppercase leading-[0.8] tracking-[-0.065em]">
             How I
             <br />
             think<span className="text-accent">.</span>
@@ -333,7 +333,7 @@ export default function AboutPage() {
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               03 / Process
             </p>
-            <h2 className="mt-7 font-display text-[clamp(3.5rem,7vw,7.5rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
+            <h2 className="mt-7 font-display text-[clamp(2.75rem,7vw,7.5rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
               From idea
               <br />
               to reality<span className="text-accent">.</span>
@@ -353,7 +353,7 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.55, delay: index * 0.07, ease }}
-              className="group flex min-h-[280px] flex-col justify-between bg-[#090909] p-6 text-[#f2efe7] transition-colors duration-300 hover:bg-[#151515] lg:min-h-[340px]"
+              className="group flex min-h-[220px] flex-col justify-between bg-[#090909] p-5 text-[#f2efe7] transition-colors duration-300 hover:bg-[#151515] sm:min-h-[280px] sm:p-6 lg:min-h-[340px]"
             >
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[10px] text-accent">
@@ -384,7 +384,7 @@ export default function AboutPage() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em]">
                 04 / Next chapter
               </p>
-              <h2 className="mt-7 font-display text-[clamp(3.25rem,7vw,7.25rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
+              <h2 className="mt-7 font-display text-[clamp(2.65rem,7vw,7.25rem)] font-black uppercase leading-[0.82] tracking-[-0.065em]">
                 Let&apos;s make
                 <br />
                 something useful.
@@ -392,7 +392,7 @@ export default function AboutPage() {
             </div>
             <Link
               href="/contact"
-              className="group inline-flex h-14 w-fit items-center gap-12 bg-[#090909] px-6 text-sm font-semibold text-[#f2efe7] transition-transform hover:-translate-y-1"
+              className="group inline-flex h-14 w-full items-center justify-between gap-5 bg-[#090909] px-6 text-sm font-semibold text-[#f2efe7] transition-transform hover:-translate-y-1 sm:w-fit sm:gap-12"
             >
               Start a conversation
               <FiArrowRight

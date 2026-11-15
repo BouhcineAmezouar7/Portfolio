@@ -18,7 +18,7 @@ export default function Home() {
         loops={0.22}
         wander={0.8}
         untangle={false}
-        smooth={3}
+        smooth={2.5}
         blend="normal"
         seed={12}
         className="home-scribble"

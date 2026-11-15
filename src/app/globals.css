@@ -240,6 +240,13 @@
     letter-spacing: -0.075em;
     color: var(--foreground);
   }
+
+  @media (max-width: 479px) {
+    .home-section-title {
+      font-size: clamp(2.55rem, 13vw, 3.25rem);
+      letter-spacing: -0.065em;
+    }
+  }
 }
 
 /* ===== Scrollbar Customization ===== */

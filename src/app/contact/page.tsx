@@ -119,7 +119,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 70, filter: "blur(12px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1, delay: 0.08, ease: siteEase }}
-            className="font-display text-[clamp(4.2rem,11vw,10.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.08em]"
+            className="font-display text-[clamp(3rem,11vw,10.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.08em] min-[380px]:text-[clamp(3.5rem,11vw,10.5rem)]"
           >
             LET&apos;S
             <br />
@@ -165,7 +165,7 @@ export default function Contact() {
                     <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-muted">
                       {info.label}
                     </span>
-                    <span className="mt-1 block truncate text-sm text-foreground">
+                    <span className="mt-1 block break-all text-sm text-foreground">
                       {info.value}
                     </span>
                   </span>
@@ -178,14 +178,14 @@ export default function Contact() {
                 <a
                   key={info.label}
                   href={info.href}
-                  className="grid grid-cols-[32px_28px_1fr_auto] items-center gap-3 border-b border-border py-5 transition-colors hover:text-accent"
+                  className="grid min-h-14 grid-cols-[24px_24px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border py-4 transition-colors hover:text-accent sm:grid-cols-[32px_28px_1fr_auto] sm:gap-3 sm:py-5"
                 >
                   {content}
                 </a>
               ) : (
                 <div
                   key={info.label}
-                  className="grid grid-cols-[32px_28px_1fr_auto] items-center gap-3 border-b border-border py-5"
+                  className="grid min-h-14 grid-cols-[24px_24px_minmax(0,1fr)_auto] items-center gap-2 border-b border-border py-4 sm:grid-cols-[32px_28px_1fr_auto] sm:gap-3 sm:py-5"
                 >
                   {content}
                 </div>
@@ -210,7 +210,7 @@ export default function Contact() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex h-12 items-center gap-3 border border-border px-4 font-mono text-[9px] uppercase tracking-[0.14em] text-muted transition-all hover:border-accent hover:text-accent"
+                  className="group flex h-12 min-w-0 flex-1 items-center justify-center gap-2 border border-border px-2 font-mono text-[9px] uppercase tracking-[0.1em] text-muted transition-all hover:border-accent hover:text-accent sm:flex-none sm:gap-3 sm:px-4 sm:tracking-[0.14em]"
                 >
                   <Icon size={15} />
                   {social.name}
@@ -308,7 +308,7 @@ export default function Contact() {
                 type="submit"
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex h-16 min-w-52 items-center justify-between gap-10 bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
+                className="group flex h-14 w-full items-center justify-between gap-5 bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 sm:h-16 sm:w-auto sm:min-w-52 sm:gap-10"
               >
                 Send Message
                 <FiSend className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />

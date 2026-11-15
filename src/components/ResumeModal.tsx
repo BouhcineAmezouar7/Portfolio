@@ -47,7 +47,7 @@ export default function ResumeModalProvider({
               </div>
               <Dialog.Close
                 aria-label="Close resume dialog"
-                className="flex h-9 w-9 items-center justify-center border border-[#37332f] text-white/60 transition-colors hover:border-[#ff3b1f] hover:text-[#ff3b1f]"
+                className="flex h-11 w-11 items-center justify-center border border-[#37332f] text-white/60 transition-colors hover:border-[#ff3b1f] hover:text-[#ff3b1f]"
               >
                 <FiX size={17} aria-hidden="true" />
               </Dialog.Close>
@@ -58,7 +58,7 @@ export default function ResumeModalProvider({
                 <FiFileText size={21} aria-hidden="true" />
               </div>
 
-              <Dialog.Title className="mt-7 font-display text-[clamp(2.6rem,8vw,4.8rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
+              <Dialog.Title className="mt-7 font-display text-[clamp(2.25rem,8vw,4.8rem)] font-black uppercase leading-[0.82] tracking-[-0.07em]">
                 My resume<span className="text-[#ff3b1f]">.</span>
               </Dialog.Title>
               <Dialog.Description className="mt-5 max-w-md text-sm leading-7 text-white/50">

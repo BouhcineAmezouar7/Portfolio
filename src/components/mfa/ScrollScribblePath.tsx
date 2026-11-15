@@ -476,7 +476,7 @@ export default function ScrollScribblePath({
 
       const intro = gsap.to(state, {
         drawn: drawnAt(0),
-        duration: 5,
+        duration: 4,
         delay: 0.1,
         ease: "power2.inOut",
         onUpdate: paint,
