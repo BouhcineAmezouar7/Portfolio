@@ -10,7 +10,7 @@ import BrandLogo from "./MyLogo";
 
 export default function Header() {
   return (
-    <header className="site-header relative z-50 w-full bg-[#070707] text-[#f2efe7]" id="header">
+    <header className="site-header relative z-50 w-full pl-7 pr-7 bg-[#070707] text-[#f2efe7]" id="header">
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
