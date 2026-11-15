@@ -10,7 +10,7 @@ import BrandLogo from "./MyLogo";
 
 export default function Header() {
   return (
-    <header className="site-header relative z-50 w-full bg-[#070707] text-[#f2efe7]">
+    <header className="site-header relative z-50 w-full bg-[#070707] text-[#f2efe7]" id="header">
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ export default function Header() {
 
           <div className="hidden flex-col justify-center sm:flex">
             <span className="font-mono text-[9px] uppercase leading-[1.7] tracking-[0.13em] text-white/60">
-              Software Engineer
+              Software Engineer Student
             </span>
             <span className="font-mono text-[9px] uppercase leading-[1.7] tracking-[0.13em] text-white/35">
               Full-Stack Developer

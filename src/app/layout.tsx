@@ -5,6 +5,7 @@ import PageTransition from "@/components/PageTransition";
 import SiteMotionProvider from "@/components/SiteMotionProvider";
 import ThemedGlowCursor from "@/components/ThemedGlowCursor";
 import SmoothScroll from "@/components/SmoothScroll";
+import ResumeModalProvider from "@/components/ResumeModal";
 import type { Metadata } from "next";
 import { profile } from "@/data/portfolio";
 
@@ -58,13 +59,15 @@ export default function RootLayout({
       >
         <SmoothScroll />
 
-        {/* Website content */}
-        <div className="relative z-10">
-          <Header />
-          <SiteMotionProvider>
-            <PageTransition>{children}</PageTransition>
-          </SiteMotionProvider>
-        </div>
+        <ResumeModalProvider>
+          {/* Website content */}
+          <div className="relative z-10">
+            <Header />
+            <SiteMotionProvider>
+              <PageTransition>{children}</PageTransition>
+            </SiteMotionProvider>
+          </div>
+        </ResumeModalProvider>
 
         {/* Cursor layer */}
         <div className="pointer-events-none fixed inset-0 z-50">

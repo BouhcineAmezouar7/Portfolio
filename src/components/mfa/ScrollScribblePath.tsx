@@ -41,6 +41,10 @@ export type ScrollScribblePathProps = {
   heroWaypoints?: Point[];
   /** Elements the thread should visit and loop around after leaving the hero. */
   threadTargetSelector?: string;
+  /** Whether later section headings reuse the hero's deliberate loop treatment. */
+  routeThroughTargets?: boolean;
+  /** Sections that each receive their own procedural continuation. */
+  proceduralSectionSelector?: string;
 };
 
 type Point = [number, number];
@@ -108,6 +112,46 @@ function plan(
   return points;
 }
 
+// A calm alternative for content sections: one broad S-curve, with just enough
+// seeded variation to keep consecutive sections from feeling copied.
+function planSimpleSection(
+  width: number,
+  height: number,
+  seed: number,
+  index: number,
+  finish = false,
+) {
+  const random = seeded(seed + (index + 1) * 137);
+  const amplitude = width * (0.14 + random() * 0.08);
+  const phase = index % 2 === 0 ? 0 : Math.PI;
+  const curveHeight = finish ? height * 0.72 : height;
+  const points: Point[] = [[width / 2, -20]];
+
+  for (let step = 1; step < 6; step++) {
+    const progress = step / 6;
+    points.push([
+      width / 2 + Math.sin(progress * Math.PI * 2 + phase) * amplitude,
+      progress * curveHeight,
+    ]);
+  }
+
+  if (finish) {
+    const endX = width * 0.62;
+    const bend = Math.min(12, Math.max(5, width * 0.008));
+    points.push(
+      [width / 2, curveHeight],
+      [width * 0.57, height * 0.78],
+      [endX, height * 0.83],
+      [endX + bend, height * 0.87],
+      [endX - bend, height * 0.9],
+      [endX, height * 0.94],
+    );
+  } else {
+    points.push([width / 2, height + 20]);
+  }
+  return points;
+}
+
 // Catmull-Rom through the points, as cubic Béziers: smooth like a hand, no corners.
 function toPath(points: Point[]) {
   let d = `M${points[0][0].toFixed(1)} ${points[0][1].toFixed(1)}`;
@@ -127,7 +171,7 @@ function toPath(points: Point[]) {
 
 const clamp = gsap.utils.clamp(0, 1);
 // How far down the screen the tip of the line stays as you scroll.
-const TIP_SPOT = 0.62;
+const TIP_SPOT = 0.8;
 
 // A thick line that paints itself down the page as you scroll, in coats: the first
 // colour leads and the others follow over it, so the tip is a run of stripes. By
@@ -150,18 +194,22 @@ export default function ScrollScribblePath({
   heroSelector = "#hero",
   heroWaypoints,
   threadTargetSelector = ".home-thread-target",
+  routeThroughTargets = true,
+  proceduralSectionSelector = ".home-tone",
 }: ScrollScribblePathProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const startRef = useRef<SVGCircleElement>(null);
   const tipRef = useRef<SVGCircleElement>(null);
 
   useGSAP(
     () => {
       const root = rootRef.current;
       const svg = svgRef.current;
+      const start = startRef.current;
       const tip = tipRef.current;
-      if (!root || !svg || !tip) return;
+      if (!root || !svg || !start || !tip) return;
       const paths = pathRefs.current
         .slice(0, colors.length)
         .filter((p) => p !== null);
@@ -208,8 +256,7 @@ export default function ScrollScribblePath({
         const point = paths[0].getPointAtLength(lead * length);
         tip.setAttribute("cx", String(point.x));
         tip.setAttribute("cy", String(point.y));
-        tip.style.visibility =
-          lead <= 0.0005 || lead >= 0.9995 ? "hidden" : "visible";
+        tip.style.visibility = lead <= 0.0005 ? "hidden" : "visible";
         root.style.backgroundColor = paintPage(state.page);
       };
 
@@ -240,9 +287,11 @@ export default function ScrollScribblePath({
               heroTop + (y / 100) * heroHeight,
             ]);
 
-            const targets = Array.from(
-              root.querySelectorAll<HTMLElement>(threadTargetSelector),
-            );
+            const targets = routeThroughTargets
+              ? Array.from(
+                  root.querySelectorAll<HTMLElement>(threadTargetSelector),
+                ).filter((target) => !hero.contains(target))
+              : [];
 
             if (targets.length) {
               // Continue the same hand-drawn route through every major title.
@@ -309,17 +358,40 @@ export default function ScrollScribblePath({
               );
               points = routed;
             } else {
-              // Keep the original generated continuation when no targets exist.
-              const remaining = Math.max(100, boxHeight - heroBottom);
-              const generated = plan(boxWidth, remaining, {
-                loops,
-                wander,
-                untangle,
-                seed,
+              // Give every section its own deterministic hand-drawn character
+              // instead of stretching one repeated motion over the whole page.
+              const sections = Array.from(
+                root.querySelectorAll<HTMLElement>(proceduralSectionSelector),
+              ).filter((section) => !section.contains(hero));
+              const continuation = sections.flatMap((section, index) => {
+                const sectionBox = section.getBoundingClientRect();
+                const sectionTop = sectionBox.top - rootBox.top;
+                const sectionHeight = Math.max(100, sectionBox.height);
+                const generated = planSimpleSection(
+                  boxWidth,
+                  sectionHeight,
+                  seed,
+                  index,
+                  index === sections.length - 1,
+                );
+
+                return generated.map(([x, y]): Point => [
+                  x,
+                  sectionTop + y,
+                ]);
               });
-              const continuation = generated
-                .filter(([, y]) => y >= 100)
-                .map(([x, y]): Point => [x, heroBottom + y]);
+
+              // Fall back to one generated continuation if the consumer does
+              // not expose section wrappers.
+              if (!continuation.length) {
+                const remaining = Math.max(100, boxHeight - heroBottom);
+                continuation.push(
+                  ...planSimpleSection(boxWidth, remaining, seed, 0, true).map(
+                    ([x, y]): Point => [x, heroBottom + y],
+                  ),
+                );
+              }
+
               points = [...custom, ...continuation];
             }
           }
@@ -331,6 +403,9 @@ export default function ScrollScribblePath({
           path.setAttribute("d", d);
           path.setAttribute("stroke-width", String(stroke));
         });
+        start.setAttribute("cx", String(points[0][0]));
+        start.setAttribute("cy", String(points[0][1]));
+        start.setAttribute("r", String(Math.max(3.5, stroke * 1.6)));
         tip.setAttribute("r", String(stroke * 2.1));
         tip.setAttribute("stroke-width", String(Math.max(1.5, stroke * 0.75)));
         length = paths[0].getTotalLength();
@@ -401,7 +476,7 @@ export default function ScrollScribblePath({
 
       const intro = gsap.to(state, {
         drawn: drawnAt(0),
-        duration: 1.5,
+        duration: 5,
         delay: 0.1,
         ease: "power2.inOut",
         onUpdate: paint,
@@ -451,6 +526,8 @@ export default function ScrollScribblePath({
         scroller,
         heroSelector,
         threadTargetSelector,
+        routeThroughTargets,
+        proceduralSectionSelector,
         JSON.stringify(heroWaypoints),
       ],
       revertOnUpdate: true,
@@ -485,6 +562,7 @@ export default function ScrollScribblePath({
             strokeDashoffset={1}
           />
         ))}
+        <circle ref={startRef} fill={colors[0]} />
         <circle
           ref={tipRef}
           fill="none"

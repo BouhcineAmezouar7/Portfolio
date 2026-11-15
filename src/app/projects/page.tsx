@@ -4,10 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  FiArrowDown,
-  FiArrowUpRight,
-} from "react-icons/fi";
+import { FiArrowDown, FiArrowUpRight } from "react-icons/fi";
 
 import { projects, projectFilters } from "@/data/portfolio";
 import { siteEase } from "@/lib/site-motion";
@@ -178,29 +175,6 @@ export default function ProjectsPage() {
                   transition={{ duration: 0.7, ease: siteEase }}
                   className="relative grid min-h-[640px] overflow-hidden border-b border-border py-10 lg:grid-cols-2 lg:gap-12 lg:py-14 xl:min-h-[720px]"
                 >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 700 500"
-                    fill="none"
-                    className={`pointer-events-none absolute top-1/2 z-0 hidden h-[70%] w-[52%] -translate-y-1/2 lg:block ${
-                      imageOnRight ? "left-0 -scale-x-100" : "right-0"
-                    }`}
-                  >
-                    <path
-                      d="M-40 224C107 221 200 246 281 201C359 157 475 142 539 211C603 280 558 388 462 394C366 400 294 320 329 246C364 172 475 169 521 235C567 301 518 364 451 350C384 336 372 273 411 242"
-                      stroke="var(--accent)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <circle
-                      cx="411"
-                      cy="242"
-                      r="7"
-                      stroke="var(--accent)"
-                      strokeWidth="2"
-                    />
-                  </svg>
-
                   <Link
                     href={`/projects/${project.slug}`}
                     aria-label={`View ${project.title} project`}

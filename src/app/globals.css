@@ -200,6 +200,12 @@
   background-color: transparent;
 }
 
+/* Only the hero lets the reference-style thread cross above its headline.
+   Later sections keep their content above the original procedural scribble. */
+.home-tone-hero > section {
+  z-index: 2;
+}
+
 .home-scribble .home-section-title,
 .home-scribble h1 {
   font-family: var(--font-archivo), Arial, sans-serif;

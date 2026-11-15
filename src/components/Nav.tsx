@@ -7,13 +7,16 @@ import {
   mainNavigationLinks,
   resumeNavigationLink,
 } from "@/data/portfolio";
+import { FiArrowUpRight } from "react-icons/fi";
+import { useResumeModal } from "@/components/ResumeModal";
 
 export default function Nav() {
   const pathname = usePathname();
+  const { openResume } = useResumeModal();
 
   return (
     <nav className="flex items-center gap-7">
-      {mainNavigationLinks.map((link, index) => {
+      {mainNavigationLinks.map((link) => {
         const isActive = pathname === link.href;
 
         return (
@@ -23,16 +26,6 @@ export default function Nav() {
             aria-current={isActive ? "page" : undefined}
             className="group relative flex items-center gap-2 py-2"
           >
-            {/* Number */}
-            <span
-              className={`
-                font-mono text-[8px] transition-colors duration-300
-                ${isActive ? "text-accent" : "text-foreground/20"}
-              `}
-            >
-              0{index + 1}
-            </span>
-
             {/* Link */}
             <span
               className={`
@@ -73,27 +66,18 @@ export default function Nav() {
       <div className="h-5 w-px bg-foreground/10" />
 
       {/* Resume */}
-      <Link href={resumeNavigationLink.href}>
-        <motion.div
-          whileHover={{ y: -2 }}
-          whileTap={{ scale: 0.97 }}
-          className="
-            group flex h-10 items-center gap-3
-            border border-border
-            px-4
-            text-foreground
-            transition-all duration-300
-            hover:border-foreground
-            hover:bg-foreground
-            hover:text-background
-          "
-        >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.15em]">
-            {resumeNavigationLink.name}
-          </span>
+      <button
+        type="button"
+        onClick={openResume}
+        className="group inline-flex items-center gap-2 py-3 font-mono text-[12px] font-medium uppercase tracking-[0.14em] text-[#ff3b1f] transition-colors duration-300 hover:text-white"
+      >
+        {resumeNavigationLink.name}
 
-        </motion.div>
-      </Link>
+        <FiArrowUpRight
+          size={14}
+          className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </button>
     </nav>
   );
 }

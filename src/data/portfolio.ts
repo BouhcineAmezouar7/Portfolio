@@ -24,13 +24,7 @@ export const mainNavigationLinks = [
 
 export const resumeNavigationLink = {
   name: "Resume",
-  href: "/resume",
 } as const;
-
-export const mobileNavigationLinks = [
-  ...mainNavigationLinks,
-  resumeNavigationLink,
-] as const;
 
 export const socialLinks = [
   {
@@ -189,7 +183,7 @@ export const projects = [
     year: "Practice project",
     description:
       "A frontend-focused storefront built to practice reusable components, responsive layouts, product presentation and navigation.",
-    tags: ["React", "JavaScript", "HTML", "CSS"],
+    tags: ["Nextjs", "JavaScript", "HTML", "CSS"],
     highlights: [
       "Reusable interface components",
       "Responsive storefront layouts",

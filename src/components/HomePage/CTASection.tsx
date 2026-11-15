@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import {
+  FiArrowUp,
   FiArrowUpRight,
   FiMail,
   FiGithub,
@@ -9,7 +10,10 @@ import {
 } from "react-icons/fi";
 import Link from "next/link";
 import { socialLinks } from "@/data/portfolio";
-import { siteEase as homeEase, siteViewport as homeViewport } from "@/lib/site-motion";
+import {
+  siteEase as homeEase,
+  siteViewport as homeViewport,
+} from "@/lib/site-motion";
 
 export default function CTASection() {
   return (
@@ -56,9 +60,9 @@ export default function CTASection() {
               transition={{ duration: 0.75, delay: 0.18, ease: homeEase }}
               className="max-w-xl text-sm leading-7 text-muted sm:text-base"
             >
-              I&apos;m interested in new projects, collaborations and opportunities.
-              If you have an idea, a project or simply want to talk about
-              development, feel free to get in touch.
+              I&apos;m interested in new projects, collaborations and
+              opportunities. If you have an idea, a project or simply want to
+              talk about development, feel free to get in touch.
             </motion.p>
 
             <motion.div
@@ -86,7 +90,6 @@ export default function CTASection() {
                   "
                 >
                   Start a Project
-
                   <FiArrowUpRight
                     size={18}
                     className="
@@ -97,7 +100,6 @@ export default function CTASection() {
                   />
                 </motion.div>
               </Link>
-
             </motion.div>
           </div>
         </div>
@@ -174,6 +176,34 @@ export default function CTASection() {
           </motion.div>
         </div>
 
+        <div className="flex justify-end">
+          <motion.a
+            href="#header"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={homeViewport}
+            transition={{ duration: 0.65, delay: 0.48, ease: homeEase }}
+            className="group flex items-center justify-between py-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition-colors hover:text-foreground"
+            aria-label="Back to top"
+          >
+            <span>Back to top</span>
+            <motion.span
+              animate={{ y: [0, 7, 0] }}
+              transition={{
+                duration: 1.6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="flex h-11 w-11 items-center justify-center text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-accent-foreground"
+            >
+              <FiArrowUp
+                size={17}
+                aria-hidden="true"
+                className="transition-transform duration-300 group-hover:-translate-y-1"
+              />
+            </motion.span>
+          </motion.a>
+        </div>
       </div>
     </section>
   );

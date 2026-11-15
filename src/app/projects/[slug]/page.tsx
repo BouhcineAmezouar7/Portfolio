@@ -47,79 +47,97 @@ export default async function ProjectDetailPage({
 
   return (
     <main className="home-tone-dark relative min-h-screen overflow-hidden px-5 pb-8 text-foreground sm:px-8 lg:px-12">
-      <section className="relative border-b border-border pb-12 pt-10 sm:pb-16 sm:pt-14 lg:min-h-[760px] lg:pb-20 lg:pt-16">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 900 800"
-          fill="none"
-          className="pointer-events-none absolute -right-40 top-0 z-0 h-full w-[68%] min-w-[700px] max-md:hidden"
-        >
-          <path
-            d="M463 -36C453 78 561 118 602 199C640 275 596 337 502 322C408 307 329 349 337 433C346 527 493 561 618 510C715 470 775 524 736 610C697 696 563 703 476 640C397 583 315 626 339 715C356 779 438 795 471 846"
-            stroke="var(--accent)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M354 371C430 292 572 283 655 352C738 421 725 548 633 600C541 652 411 613 377 518C343 423 419 336 514 350C609 364 649 468 590 532C531 596 433 558 428 482C423 406 498 370 553 410"
-            stroke="var(--accent)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          <circle cx="471" cy="770" r="9" stroke="var(--accent)" strokeWidth="2.5" />
-          <circle cx="471" cy="770" r="3" fill="var(--accent)" />
-        </svg>
-
+      <section className="relative flex min-h-[calc(100svh-80px)] flex-col border-b border-border">
         <SiteReveal>
-          <div className="relative z-10 flex items-center justify-between gap-5 border-b border-border pb-5">
+          <div className="relative z-10 grid min-h-14 grid-cols-2 border-y border-border sm:grid-cols-[1fr_auto_1fr]">
             <Link
               href="/projects"
-              className="group inline-flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent sm:text-[10px]"
+              className="group col-start-1 row-start-1 flex min-w-0 items-center gap-3 border-r border-border pr-3 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground sm:col-start-auto sm:row-start-auto sm:pr-5 sm:text-[10px]"
             >
-              <FiArrowLeft className="transition-transform group-hover:-translate-x-1" size={15} />
+              <span className="flex h-8 w-8 items-center justify-center border border-border transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
+                <FiArrowLeft
+                  className="transition-transform group-hover:-translate-x-0.5"
+                  size={14}
+                />
+              </span>
               Work index
             </Link>
-            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted sm:text-[10px]">
-              {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+
+            <span className="hidden items-center px-8 font-mono text-[9px] uppercase tracking-[0.2em] text-muted sm:flex">
+              Selected project / Case study
             </span>
+
+            <div className="col-start-2 row-start-1 flex min-w-0 items-center justify-end gap-3 overflow-hidden border-l border-border pl-3 font-mono text-[9px] uppercase tracking-[0.18em] sm:col-start-auto sm:row-start-auto sm:pl-5 sm:text-[10px]">
+              <span className="hidden text-muted sm:inline">Archive</span>
+              <span className="text-accent">
+                {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+              </span>
+            </div>
           </div>
         </SiteReveal>
 
-        <div className="relative z-10 grid min-h-[600px] items-end gap-12 pt-16 lg:grid-cols-[1.35fr_0.65fr] lg:pt-24">
-          <SiteReveal direction="left" className="min-w-0">
-            <p className="mb-7 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-              <span className="h-px w-10 bg-accent" />
+        <div className="relative z-10 grid flex-1 lg:grid-cols-[minmax(0,1fr)_20rem]">
+          <SiteReveal
+            direction="left"
+            className="flex min-w-0 flex-col justify-between py-12 pr-0 sm:py-16 lg:py-20 lg:pr-12"
+          >
+            <div className="flex items-center gap-4 font-mono text-[9px] uppercase tracking-[0.2em] text-accent sm:text-[10px]">
+              <span className="h-2 w-2 bg-accent" />
               {project.category}
-            </p>
-            <h1 className="break-words font-display text-[clamp(4rem,11vw,11rem)] font-black uppercase leading-[0.76] tracking-[-0.08em]">
+              <span className="h-px w-12 bg-accent/70" />
+            </div>
+
+            <h1 className="my-14 max-w-[11ch] break-words font-display text-[clamp(4.2rem,12vw,12.5rem)] font-black uppercase leading-[0.72] tracking-[-0.085em] sm:my-16">
               {project.title}
               <span className="text-accent">.</span>
             </h1>
-          </SiteReveal>
 
-          <SiteReveal direction="right" delay={0.12} className="min-w-0 lg:mb-3 lg:justify-self-end">
-            <div className="border-l border-border pl-6">
-              <p className="text-base font-medium leading-8 sm:text-lg">
+            <div className="flex flex-col justify-between gap-7 border-t border-border pt-6 sm:flex-row sm:items-end">
+              <p className="max-w-lg font-display text-lg font-semibold leading-tight tracking-[-0.03em] sm:text-2xl">
                 {project.type}
               </p>
-              <div className="mt-7 grid grid-cols-2 gap-6 border-t border-border pt-5 font-mono text-[9px] uppercase tracking-[0.15em]">
-                <div>
-                  <p className="text-muted">Status / Year</p>
-                  <p className="mt-2 text-accent">{project.year}</p>
-                </div>
-                <div>
-                  <p className="text-muted">Stack size</p>
-                  <p className="mt-2 text-accent">{String(project.tags.length).padStart(2, "0")} tools</p>
-                </div>
-              </div>
               <a
                 href="#case-study"
-                className="mt-8 inline-flex items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent"
+                className="group inline-flex w-fit items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground"
               >
-                Explore the case study
-                <FiArrowDown className="text-accent" size={15} />
+                View case study
+                <span className="flex h-9 w-9 items-center justify-center border border-border text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
+                  <FiArrowDown size={14} />
+                </span>
               </a>
             </div>
+          </SiteReveal>
+
+          <SiteReveal
+            direction="right"
+            delay={0.12}
+            className="flex min-w-0 flex-col border-t border-border lg:border-l lg:border-t-0"
+          >
+            <div className="relative flex min-h-48 flex-1 items-center justify-center overflow-hidden border-b border-border bg-card/30 lg:min-h-0">
+              <span className="font-display text-[clamp(8rem,19vw,16rem)] font-black leading-none tracking-[-0.1em] text-transparent [-webkit-text-stroke:1px_var(--accent)]">
+                {project.number}
+              </span>
+              <span className="absolute bottom-5 left-5 font-mono text-[8px] uppercase tracking-[0.2em] text-muted">
+                Project number
+              </span>
+            </div>
+
+            <dl className="grid grid-cols-2 font-mono text-[9px] uppercase tracking-[0.15em] lg:grid-cols-1">
+              <div className="border-b border-r border-border p-5 lg:border-r-0">
+                <dt className="text-muted">Status / Year</dt>
+                <dd className="mt-3 text-accent">{project.year}</dd>
+              </div>
+              <div className="border-b border-border p-5">
+                <dt className="text-muted">Stack size</dt>
+                <dd className="mt-3 text-accent">
+                  {String(project.tags.length).padStart(2, "0")} tools
+                </dd>
+              </div>
+              <div className="col-span-2 p-5 lg:col-span-1">
+                <dt className="text-muted">Discipline</dt>
+                <dd className="mt-3 text-foreground">{project.category}</dd>
+              </div>
+            </dl>
           </SiteReveal>
         </div>
       </section>
