@@ -91,7 +91,10 @@ export default function MobileNav() {
           <span className="text-accent">01 — 04</span>
         </div>
 
-        <nav aria-label="Mobile navigation" className="flex w-full flex-1 flex-col">
+        <nav
+          aria-label="Mobile navigation"
+          className="flex w-full flex-1 flex-col"
+        >
           {mainNavigationLinks.map((link, index) => {
             const isActive = pathname === link.href;
 
@@ -111,14 +114,14 @@ export default function MobileNav() {
                   href={link.href}
                   onClick={() => setOpen(false)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`group grid min-h-[78px] w-full grid-cols-[1.8rem_1fr_auto] items-center gap-2 border-b border-border px-4 transition-colors min-[380px]:min-h-[88px] min-[380px]:grid-cols-[2.25rem_1fr_auto] min-[380px]:gap-3 min-[380px]:px-5 sm:min-h-[104px] sm:grid-cols-[2.75rem_1fr_auto] sm:px-7 ${
+                  className={`group grid min-h-[78px] py-7 w-full grid-cols-[1.8rem_1fr_auto] items-center gap-2 border-b border-border px-4 transition-colors min-[380px]:min-h-[88px] min-[380px]:grid-cols-[2.25rem_1fr_auto] min-[380px]:gap-3 min-[380px]:px-5 sm:min-h-[104px] sm:grid-cols-[2.75rem_1fr_auto] sm:px-7 ${
                     isActive
                       ? "bg-accent text-accent-foreground"
                       : "text-foreground hover:bg-foreground hover:text-background"
                   }`}
                 >
                   <span
-                    className={`self-start pt-5 font-mono text-[9px] tracking-[0.16em] min-[380px]:pt-6 sm:pt-7 ${
+                    className={`self-start pt-5 font-mono text-[11px] tracking-[0.16em] min-[380px]:pt-6 sm:pt-7 ${
                       isActive ? "text-black/60" : "text-muted"
                     }`}
                   >
@@ -179,7 +182,6 @@ export default function MobileNav() {
               ))}
             </div>
           </div>
-
         </div>
       </SheetContent>
     </Sheet>

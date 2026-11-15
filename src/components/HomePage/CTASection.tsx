@@ -176,7 +176,12 @@ export default function CTASection() {
           </motion.div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          <div>
+            <span className=" flex justify-center items-center py-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted transition-colors hover:text-foreground">
+              @2026 Bouhcine Amezouar
+            </span>
+          </div>
           <motion.a
             href="#header"
             initial={{ opacity: 0, y: 16 }}

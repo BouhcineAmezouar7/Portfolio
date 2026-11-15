@@ -48,7 +48,7 @@ export default function HeroSection() {
                     delay: 0.2 + index * 0.16,
                     ease: homeEase,
                   }}
-                  className="block whitespace-nowrap text-[clamp(2.55rem,10.45vw,11.5rem)] min-[380px]:text-[clamp(3rem,10.45vw,11.5rem)]"
+                  className="block whitespace-nowrap text-[clamp(2.55rem,10.45vw,11.5rem)] min-[380px]:text-[clamp(3.2rem,10.45vw,11.5rem)]"
                 >
                   {line}
                 </motion.span>
