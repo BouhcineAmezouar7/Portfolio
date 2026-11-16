@@ -83,7 +83,7 @@ export default function ResumeModalProvider({
                 </a>
                 <a
                   href={profile.resumePath}
-                  download="Bouhcine_Amezouar_Resume.pdf"
+                  download="Bouhcine_Amezouar_ATS_Resume.pdf"
                   onClick={() => setOpen(false)}
                   className="group flex min-h-14 items-center justify-between gap-5 bg-[#ff3b1f] px-5 text-xs font-semibold uppercase tracking-[0.08em] text-black transition-colors hover:bg-[#f2efe7]"
                 >
