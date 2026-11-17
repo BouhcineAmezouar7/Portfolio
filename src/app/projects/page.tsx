@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowDown, FiArrowUpRight } from "react-icons/fi";
@@ -85,11 +86,10 @@ export default function ProjectsPage() {
               <span className="h-px w-10 bg-accent" />
               Products · systems · experiments
             </p>
-            <h1 className="font-display text-[clamp(3.4rem,12vw,11.5rem)] font-black uppercase leading-[0.75] tracking-[-0.08em] min-[380px]:text-[clamp(3.9rem,12vw,11.5rem)]">
-              Work
-              <br />
-              index<span className="text-accent">.</span>
-            </h1>
+            <PageTitle
+              lines={["Work", <>index<span className="text-accent">.</span></>]}
+              className="font-display text-[clamp(3.4rem,12vw,11.5rem)] font-black uppercase leading-[0.75] tracking-[-0.08em] min-[380px]:text-[clamp(3.9rem,12vw,11.5rem)]"
+            />
           </motion.div>
 
           <motion.div

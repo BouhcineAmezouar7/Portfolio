@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import PageTitle from "@/components/PageTitle";
 import { useState } from "react";
 import {
   FiArrowUpRight,
@@ -115,16 +116,10 @@ export default function Contact() {
 
       <section className="relative z-10 border-b border-border py-12 sm:py-16 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-          <motion.h1
-            initial={{ opacity: 0, y: 70, filter: "blur(12px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1, delay: 0.08, ease: siteEase }}
-            className="font-display text-[clamp(3rem,11vw,10.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.08em] min-[380px]:text-[clamp(3.5rem,11vw,10.5rem)]"
-          >
-            LET&apos;S
-            <br />
-            <span className="text-accent">CONNECT.</span>
-          </motion.h1>
+          <PageTitle
+              lines={["LET’S", <span className="text-accent" key="connect">CONNECT.</span>]}
+              className="font-display text-[clamp(3rem,11vw,10.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.08em] min-[380px]:text-[clamp(3.5rem,11vw,10.5rem)]"
+            />
 
           <motion.div
             initial={{ opacity: 0, y: 32 }}

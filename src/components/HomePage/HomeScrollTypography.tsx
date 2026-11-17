@@ -3,16 +3,18 @@
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { RefObject } from "react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function HomeScrollTypography() {
+export function useTitleScrollMotion(scope?: RefObject<HTMLElement | null>) {
   useGSAP(() => {
+    const root = scope?.current ?? document;
     const titles = gsap.utils.toArray<HTMLElement>(
-      ".home-scribble .home-scroll-title",
+      root.querySelectorAll(scope ? ".home-scroll-title" : ".home-scribble .home-scroll-title"),
     );
     const lines = gsap.utils.toArray<HTMLElement>(
-      ".home-scribble .home-title-line",
+      root.querySelectorAll(scope ? ".home-title-line" : ".home-scribble .home-title-line"),
     );
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -50,7 +52,10 @@ export default function HomeScrollTypography() {
     });
 
     ScrollTrigger.refresh();
-  }, []);
+  }, { scope, dependencies: [] });
+}
 
+export default function HomeScrollTypography() {
+  useTitleScrollMotion();
   return null;
 }

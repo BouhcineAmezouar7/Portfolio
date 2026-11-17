@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -128,13 +129,10 @@ export default function AboutPage() {
               <span className="h-px w-10 bg-accent" />
               The person behind the work
             </p>
-            <h1 className="font-display text-[clamp(3.1rem,10.5vw,10.5rem)] font-black uppercase leading-[0.77] tracking-[-0.075em] min-[380px]:text-[clamp(3.6rem,10.5vw,10.5rem)]">
-              Human
-              <br />
-              behind
-              <br />
-              the code<span className="text-accent">.</span>
-            </h1>
+            <PageTitle
+              lines={["Human", "behind", <>the code<span className="text-accent">.</span></>]}
+              className="font-display text-[clamp(3.1rem,10.5vw,10.5rem)] font-black uppercase leading-[0.77] tracking-[-0.075em] min-[380px]:text-[clamp(3.6rem,10.5vw,10.5rem)]"
+            />
           </motion.div>
 
           <motion.div
