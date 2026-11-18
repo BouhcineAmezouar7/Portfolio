@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { checkContactRateLimit, readContactBody, verifyContactToken } from "@/lib/contact-security";
 
 export const runtime = "nodejs";
 
@@ -56,12 +57,16 @@ function renderContactEmail(name: string, email: string, subject: string, messag
 }
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
-  try {
-    const { name, email, subject, message, website } = body ?? {};
+  const parsed = await readContactBody(request);
+  if ("status" in parsed) {
+    const error = parsed.status === 413 ? "Your message is too large." : "Please enter valid contact details.";
+    return NextResponse.json({ error }, { status: parsed.status });
+  }
+  const { name, email, subject, message, website, turnstileToken } = parsed.body;
 
+  try {
     if (
-      website ||
+      (website !== undefined && website !== "") ||
       typeof name !== "string" ||
       typeof email !== "string" ||
       typeof subject !== "string" ||
@@ -76,6 +81,39 @@ export async function POST(request: Request) {
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
       return NextResponse.json({ error: "Please enter valid contact details." }, { status: 400 });
+    }
+
+    if (typeof turnstileToken !== "string" || !turnstileToken.trim() || turnstileToken.length > 2048) {
+      return NextResponse.json({ error: "Please complete the verification and try again." }, { status: 400 });
+    }
+
+    const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
+    if (!secret) {
+      console.error("Contact verification is not configured");
+      return NextResponse.json({ error: "The contact form is temporarily unavailable." }, { status: 503 });
+    }
+
+    try {
+      const limit = await checkContactRateLimit(request, secret);
+      if (!limit.success) {
+        const retryAfter = Math.max(1, Math.ceil((limit.reset - Date.now()) / 1000));
+        return NextResponse.json(
+          { error: "Too many messages from your connection. Please try again later." },
+          { status: 429, headers: { "Retry-After": String(retryAfter) } },
+        );
+      }
+    } catch {
+      console.error("Contact rate limiter unavailable");
+      return NextResponse.json({ error: "The contact form is temporarily unavailable." }, { status: 503 });
+    }
+
+    try {
+      if (!await verifyContactToken(turnstileToken, secret)) {
+        return NextResponse.json({ error: "Verification failed or expired. Please verify again." }, { status: 403 });
+      }
+    } catch {
+      console.error("Contact verification unavailable");
+      return NextResponse.json({ error: "Verification is temporarily unavailable. Please try again." }, { status: 503 });
     }
 
     const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -97,13 +135,13 @@ export async function POST(request: Request) {
     });
 
     if (error || !data?.id) {
-      console.error("Resend send failed:", error);
+      console.error("Resend send failed");
       return NextResponse.json({ error: "Message could not be sent. Please try again." }, { status: 502 });
     }
     console.info("Resend accepted contact email:", data.id);
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Contact API error:", error);
+  } catch {
+    console.error("Contact email request failed");
     return NextResponse.json({ error: "Message could not be sent. Please try again." }, { status: 500 });
   }
 }

@@ -1,16 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import PageTitle from "@/components/PageTitle";
-import { useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   FiArrowUpRight,
+  FiCheck,
   FiGithub,
   FiLinkedin,
   FiMail,
   FiMapPin,
   FiPhone,
   FiSend,
+  FiX,
 } from "react-icons/fi";
 
 import {
@@ -67,6 +70,39 @@ const fields = [
 
 const fieldClass =
   "h-14 w-full border-0 border-b border-border bg-transparent px-0 text-sm text-foreground outline-none transition-colors placeholder:text-muted/55 hover:border-muted focus:border-accent";
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+const narrowWidgetQuery = "(width < 340px)";
+
+function subscribeToWidgetWidth(onChange: () => void) {
+  const query = window.matchMedia(narrowWidgetQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function needsCompactWidgetSnapshot() {
+  return window.matchMedia(narrowWidgetQuery).matches;
+}
+
+function getVerificationError(code: string) {
+  switch (code) {
+    case "110100":
+    case "110110":
+    case "400020":
+    case "400070":
+      return "Verification is temporarily unavailable. Please let the site owner know.";
+    case "110200":
+      return process.env.NODE_ENV === "development"
+        ? "This hostname is not authorized in Cloudflare Turnstile. For localhost, use Cloudflare’s test keys or authorize the hostname in Cloudflare."
+        : "Verification is unavailable on this address. Please open the main portfolio address.";
+    case "110600":
+    case "110620":
+      return "Verification timed out. Please try again.";
+    case "200500":
+      return "Verification could not load. Check whether your browser or network blocks Cloudflare, then reload.";
+    default:
+      return "Verification failed. Reload the page or try another browser.";
+  }
+}
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -77,16 +113,33 @@ export default function Contact() {
   });
 
   const [isSending, setIsSending] = useState(false);
+  const needsCompactWidget = useSyncExternalStore(
+    subscribeToWidgetWidth,
+    needsCompactWidgetSnapshot,
+    () => false,
+  );
+  const sendingRef = useRef(false);
+  const turnstile = useRef<TurnstileInstance>(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [verificationError, setVerificationError] = useState("");
   const [feedback, setFeedback] = useState<{
     type: "success" | "error";
     message: string;
   } | null>(null);
   const [website, setWebsite] = useState("");
 
+  useEffect(() => {
+    if (feedback?.type !== "success") return;
+
+    const timeout = window.setTimeout(() => setFeedback(null), 6000);
+    return () => window.clearTimeout(timeout);
+  }, [feedback]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSending) return;
+    if (sendingRef.current || !turnstileToken) return;
 
+    sendingRef.current = true;
     setIsSending(true);
     setFeedback(null);
 
@@ -94,7 +147,7 @@ export default function Contact() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, website }),
+        body: JSON.stringify({ ...formData, website, turnstileToken }),
       });
 
       const result = await response.json().catch(() => null);
@@ -104,7 +157,7 @@ export default function Contact() {
 
       setFeedback({
         type: "success",
-        message: "Your message has been sent. Thanks for reaching out!",
+        message: "Thanks for reaching out!",
       });
       setFormData({ name: "", email: "", subject: "", message: "" });
       setWebsite("");
@@ -114,6 +167,10 @@ export default function Contact() {
         message: error instanceof Error ? error.message : "Something went wrong. Please try again.",
       });
     } finally {
+      setTurnstileToken("");
+      setVerificationError("");
+      turnstile.current?.reset();
+      sendingRef.current = false;
       setIsSending(false);
     }
   };
@@ -343,13 +400,57 @@ export default function Contact() {
               </label>
             </div>
 
-            <div className="mt-9 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+            <div className="mt-9">
+              {turnstileSiteKey ? (
+                <Turnstile
+                  ref={turnstile}
+                  siteKey={turnstileSiteKey}
+                  options={{
+                    action: "contact",
+                    theme: "auto",
+                    size: needsCompactWidget ? "compact" : "flexible",
+                    responseField: false,
+                  }}
+                  onWidgetLoad={() => setTurnstileToken("")}
+                  onSuccess={(token) => {
+                    setTurnstileToken(token);
+                    setVerificationError("");
+                  }}
+                  onExpire={() => {
+                    setTurnstileToken("");
+                    setVerificationError("Verification expired. Please verify again.");
+                  }}
+                  onTimeout={() => {
+                    setTurnstileToken("");
+                    setVerificationError("Verification timed out. Please try again.");
+                  }}
+                  onError={(code) => {
+                    setTurnstileToken("");
+                    setVerificationError(getVerificationError(code));
+                    if (process.env.NODE_ENV === "development" && /^\d{6}$/.test(code)) {
+                      console.warn("Cloudflare Turnstile error:", code);
+                    }
+                  }}
+                  onUnsupported={() => setVerificationError("This browser cannot complete verification.")}
+                  scriptOptions={{
+                    onError: () => setVerificationError("Verification could not load. Please reload the page."),
+                  }}
+                />
+              ) : (
+                <p role="status" className="text-sm text-red-400">Verification is temporarily unavailable.</p>
+              )}
+              <p role="status" className={verificationError ? "mt-2 text-sm text-red-400" : "sr-only"}>
+                {verificationError}
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
               <p className="max-w-xs font-mono text-[9px] uppercase leading-5 tracking-[0.12em] text-muted">
                 Your message will be delivered directly to my inbox.
               </p>
               <motion.button
                 type="submit"
-                disabled={isSending}
+                disabled={isSending || !turnstileToken}
                 aria-busy={isSending}
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.98 }}
@@ -359,12 +460,10 @@ export default function Contact() {
                 <FiSend className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </motion.button>
             </div>
-            {feedback && (
+            {feedback?.type === "error" && (
               <p
                 role="status"
-                aria-live="polite"
-                className={`mt-5 text-sm ${feedback.type === "success" ? "text-green-400" : "text-red-400"
-                  }`}
+                className="mt-5 text-sm text-red-400"
               >
                 {feedback.message}
               </p>
@@ -381,6 +480,29 @@ export default function Contact() {
           {profile.location}
         </span>
       </footer>
+      <div className="fixed inset-x-4 bottom-4 z-50 sm:left-auto sm:right-6 sm:bottom-6 sm:w-96">
+        <div role="status" aria-atomic="true">
+          {feedback?.type === "success" && (
+            <div className="flex items-start gap-3 border border-border border-l-4 border-l-accent bg-card p-4 text-card-foreground shadow-xl">
+              <FiCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-accent" />
+              <div className="min-w-0 flex-1">
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em]">
+                  Message sent
+                </p>
+                <p className="mt-1 text-sm text-muted">{feedback.message}</p>
+              </div>
+              <button
+                type="button"
+                aria-label="Dismiss notification"
+                onClick={() => setFeedback(null)}
+                className="flex size-8 shrink-0 items-center justify-center text-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                <FiX aria-hidden="true" size={18} />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </main>
   );
 }

@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@marsidev/react-turnstile": "^1.6.3",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@upstash/ratelimit": "^2.2.1",
+    "@upstash/redis": "^1.41.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
     "gsap": "^3.15.0",
