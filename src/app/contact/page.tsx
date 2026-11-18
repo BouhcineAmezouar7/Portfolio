@@ -76,13 +76,46 @@ export default function Contact() {
     message: "",
   });
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const [isSending, setIsSending] = useState(false);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+  const [website, setWebsite] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const subject = encodeURIComponent(formData.subject || "Portfolio inquiry");
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`,
-    );
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+    if (isSending) return;
+
+    setIsSending(true);
+    setFeedback(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, website }),
+      });
+
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.success !== true) {
+        throw new Error(result?.error || "Unable to send your message.");
+      }
+
+      setFeedback({
+        type: "success",
+        message: "Your message has been sent. Thanks for reaching out!",
+      });
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setWebsite("");
+    } catch (error) {
+      setFeedback({
+        type: "error",
+        message: error instanceof Error ? error.message : "Something went wrong. Please try again.",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -117,9 +150,9 @@ export default function Contact() {
       <section className="relative z-10 border-b border-border py-12 sm:py-16 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
           <PageTitle
-              lines={["LET’S", <span className="text-accent" key="connect">CONNECT.</span>]}
-              className="font-display text-[clamp(3rem,11vw,10.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.08em] min-[380px]:text-[clamp(3.5rem,11vw,10.5rem)]"
-            />
+            lines={["LET’S", <span className="text-accent" key="connect">CONNECT.</span>]}
+            className="font-display text-[clamp(3rem,11vw,10.5rem)] font-extrabold uppercase leading-[0.8] tracking-[-0.08em] min-[380px]:text-[clamp(3.5rem,11vw,10.5rem)]"
+          />
 
           <motion.div
             initial={{ opacity: 0, y: 32 }}
@@ -237,6 +270,17 @@ export default function Contact() {
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8">
+            <div hidden>
+              <label htmlFor="website">Leave this field empty</label>
+              <input
+                id="website"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(event) => setWebsite(event.target.value)}
+              />
+            </div>
             <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
               {fields.map((field, index) => (
                 <label
@@ -261,6 +305,8 @@ export default function Contact() {
                     }
                     placeholder={field.placeholder}
                     required
+                    maxLength={field.name === "email" ? 254 : 120}
+                    disabled={isSending}
                     value={formData[field.name]}
                     onChange={(event) =>
                       setFormData((current) => ({
@@ -283,6 +329,8 @@ export default function Contact() {
                   rows={6}
                   placeholder="Tell me about your idea, project, or opportunity..."
                   required
+                  maxLength={5000}
+                  disabled={isSending}
                   value={formData.message}
                   onChange={(event) =>
                     setFormData((current) => ({
@@ -297,18 +345,30 @@ export default function Contact() {
 
             <div className="mt-9 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
               <p className="max-w-xs font-mono text-[9px] uppercase leading-5 tracking-[0.12em] text-muted">
-                Opens your email application with the message prepared.
+                Your message will be delivered directly to my inbox.
               </p>
               <motion.button
                 type="submit"
+                disabled={isSending}
+                aria-busy={isSending}
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex h-14 w-full items-center justify-between gap-5 bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 sm:h-16 sm:w-auto sm:min-w-52 sm:gap-10"
+                className="group flex h-14 w-full items-center justify-between gap-5 bg-accent px-6 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:h-16 sm:w-auto sm:min-w-52 sm:gap-10"
               >
-                Send Message
+                {isSending ? "Sending..." : "Send Message"}
                 <FiSend className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </motion.button>
             </div>
+            {feedback && (
+              <p
+                role="status"
+                aria-live="polite"
+                className={`mt-5 text-sm ${feedback.type === "success" ? "text-green-400" : "text-red-400"
+                  }`}
+              >
+                {feedback.message}
+              </p>
+            )}
           </form>
         </motion.div>
       </section>
