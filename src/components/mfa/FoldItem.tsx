@@ -249,7 +249,7 @@ export default function FoldItem({
         ref={media}
         role="img"
         aria-label={project.alt}
-        className={`fold-media relative aspect-[16/10] [perspective-origin:50%_0%] [perspective:var(--fold-perspective)] lg:row-start-1 ${
+        className={`fold-media relative aspect-video [perspective-origin:50%_0%] [perspective:var(--fold-perspective)] lg:row-start-1 ${
           flip ? "lg:col-span-7 lg:col-start-6" : "lg:col-span-7 lg:col-start-1"
         }`}
         style={{ ["--fold-count" as string]: count }}

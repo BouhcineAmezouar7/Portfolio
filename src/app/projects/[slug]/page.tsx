@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FiArrowDown, FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowDown, FiArrowLeft, FiArrowRight, FiArrowUpRight, FiGithub } from "react-icons/fi";
 
 import SiteReveal from "@/components/SiteReveal";
 import { projects } from "@/data/portfolio";
@@ -43,6 +43,14 @@ export default async function ProjectDetailPage({
   const diagram =
     "diagram" in project && typeof project.diagram === "string"
       ? project.diagram
+      : null;
+  const github =
+    "github" in project && typeof project.github === "string"
+      ? project.github
+      : null;
+  const demo =
+    "demo" in project && typeof project.demo === "string"
+      ? project.demo
       : null;
 
   return (
@@ -96,15 +104,35 @@ export default async function ProjectDetailPage({
               <p className="max-w-lg font-display text-lg font-semibold leading-tight tracking-[-0.03em] sm:text-2xl">
                 {project.type}
               </p>
-              <a
-                href="#case-study"
-                className="group inline-flex min-h-11 w-fit items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground"
-              >
-                View case study
-                <span className="flex h-11 w-11 items-center justify-center border border-border text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
-                  <FiArrowDown size={14} />
-                </span>
-              </a>
+              <div className="flex flex-wrap items-center gap-5">
+                {(github || demo) && (
+                  <a
+                    href={github ?? demo ?? undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex min-h-11 w-fit items-center gap-3 border-b border-accent font-mono text-[9px] uppercase tracking-[0.18em] transition-colors hover:text-accent"
+                  >
+                    {github ? "View on GitHub" : "Live demo"}
+                    {github ? (
+                      <FiGithub size={15} />
+                    ) : (
+                      <FiArrowUpRight
+                        className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        size={15}
+                      />
+                    )}
+                  </a>
+                )}
+                <a
+                  href="#case-study"
+                  className="group inline-flex min-h-11 w-fit items-center gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-foreground"
+                >
+                  View case study
+                  <span className="flex h-11 w-11 items-center justify-center border border-border text-accent transition-colors group-hover:border-accent group-hover:bg-accent group-hover:text-[#090909]">
+                    <FiArrowDown size={14} />
+                  </span>
+                </a>
+              </div>
             </div>
           </SiteReveal>
 
@@ -144,14 +172,14 @@ export default async function ProjectDetailPage({
 
       <SiteReveal className="border-b border-border py-5 sm:py-8">
         <figure className="relative overflow-hidden bg-card">
-          <div className="relative aspect-[16/10] w-full sm:aspect-[16/8] lg:aspect-[16/7]">
+          <div className="relative aspect-video w-full overflow-hidden">
             <Image
               src={project.image}
-              alt={`${project.title} project screenshot`}
+              alt={`${project.title} project preview`}
               fill
               priority
               sizes="100vw"
-              className="object-cover object-top"
+              className="object-contain"
             />
             <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
           </div>

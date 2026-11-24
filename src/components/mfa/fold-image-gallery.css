@@ -39,7 +39,7 @@
   width: 100%;
   height: calc(100% * var(--fold-count));
   max-width: none;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* SplitText masks: extra room so descenders are not clipped */

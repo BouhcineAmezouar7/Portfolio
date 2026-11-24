@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import FoldImageGallery from "@/components/mfa/FoldImageGallery";
 import type { FoldProject } from "@/components/mfa/FoldItem";
-import { featuredProjects } from "@/data/portfolio";
+import { featuredProjects, projects } from "@/data/portfolio";
 import { revealUp, siteViewport as homeViewport } from "@/lib/site-motion";
 
 const foldProjects: FoldProject[] = featuredProjects.map((project) => ({
@@ -43,7 +43,7 @@ export default function ProjectsSection() {
           </div>
 
           <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-            04 / 06
+            {String(featuredProjects.length).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
           </span>
         </motion.div>
 

@@ -165,6 +165,14 @@ export default function ProjectsPage() {
           >
             {filteredProjects.map((project, index) => {
               const imageOnRight = index % 2 === 1;
+              const github =
+                "github" in project && typeof project.github === "string"
+                  ? project.github
+                  : null;
+              const demo =
+                "demo" in project && typeof project.demo === "string"
+                  ? project.demo
+                  : null;
 
               return (
                 <motion.article
@@ -178,7 +186,7 @@ export default function ProjectsPage() {
                   <Link
                     href={`/projects/${project.slug}`}
                     aria-label={`View ${project.title} project`}
-                    className={`group/image relative z-10 min-h-[260px] overflow-hidden bg-card sm:min-h-[340px] lg:min-h-0 ${
+                    className={`group/image relative z-10 aspect-video overflow-hidden bg-card ${
                       imageOnRight ? "lg:order-2" : ""
                     }`}
                   >
@@ -187,7 +195,7 @@ export default function ProjectsPage() {
                       alt={`${project.title} project preview`}
                       fill
                       sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover object-center transition-transform duration-700 ease-out group-hover/image:scale-[1.035]"
+                      className="object-contain transition-transform duration-700 ease-out group-hover/image:scale-[1.035]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/5" />
                     <span className="absolute left-5 top-5 border border-white/25 bg-black/40 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.16em] text-white backdrop-blur-sm">
@@ -238,16 +246,32 @@ export default function ProjectsPage() {
                           </span>
                         ))}
                       </div>
-                      <Link
-                        href={`/projects/${project.slug}`}
-                        className="group/link mt-7 inline-flex items-center gap-8 border-b border-accent pb-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors hover:text-accent"
-                      >
-                        Read case study
-                        <FiArrowUpRight
-                          className="text-accent transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1"
-                          size={17}
-                        />
-                      </Link>
+                      <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-5">
+                        <Link
+                          href={`/projects/${project.slug}`}
+                          className="group/link inline-flex items-center gap-8 border-b border-accent pb-2 text-xs font-semibold uppercase tracking-[0.12em] transition-colors hover:text-accent"
+                        >
+                          Read case study
+                          <FiArrowUpRight
+                            className="text-accent transition-transform group-hover/link:-translate-y-1 group-hover/link:translate-x-1"
+                            size={17}
+                          />
+                        </Link>
+                        {(github || demo) && (
+                          <a
+                            href={github ?? demo ?? undefined}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/external inline-flex items-center gap-3 border-b border-border pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted transition-colors hover:border-accent hover:text-accent"
+                          >
+                            {github ? "GitHub" : "Live demo"}
+                            <FiArrowUpRight
+                              className="transition-transform group-hover/external:-translate-y-1 group-hover/external:translate-x-1"
+                              size={17}
+                            />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.article>
