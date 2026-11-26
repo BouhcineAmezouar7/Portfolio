@@ -22,93 +22,127 @@ import {
   SiSqlite,
   SiSupabase,
   SiBetterauth,
+  SiC,
+  SiCloudinary,
+  SiCplusplus,
+  SiFramer,
+  SiGithub,
+  SiGnu,
+  SiJsonwebtokens,
+  SiNginx,
+  SiReacthookform,
+  SiReactquery,
+  SiRedis,
   SiResend,
+  SiVercel,
+  SiZod,
 } from "react-icons/si";
-import { FiArrowUpRight, FiServer, FiShare2 } from "react-icons/fi";
+import {
+  FiArrowUpRight,
+  FiCalendar,
+  FiServer,
+  FiShare2,
+} from "react-icons/fi";
 import type { IconType } from "react-icons";
 import {
   revealUp,
   siteEase as homeEase,
   siteViewport as homeViewport,
 } from "@/lib/site-motion";
-import { technicalSkills } from "@/data/portfolio";
+import { skillFilters, technicalSkills } from "@/data/portfolio";
 
-type Category =
-  | "All"
-  | "Frontend"
-  | "Backend"
-  | "Database"
-  | "Tools"
-  | "Additional";
+type Category = (typeof skillFilters)[number];
+type SkillDefinition = (typeof technicalSkills)[number];
+type SkillName = SkillDefinition["name"];
 
-type Skill = {
-  name: string;
+type Skill = SkillDefinition & {
   icon: IconType;
-  category: Exclude<Category, "All">;
-  description: string;
 };
 
-const skillIcons: Record<string, IconType> = {
+const skillIcons = {
   "Next.js": SiNextdotjs,
   "React.js": SiReact,
   TypeScript: SiTypescript,
   JavaScript: SiJavascript,
   "Tailwind CSS": SiTailwindcss,
   HTML5: SiHtml5,
-  CSS: SiCss,
+  CSS3: SiCss,
+  "Framer Motion": SiFramer,
+  FullCalendar: FiCalendar,
   NestJS: SiNestjs,
   Laravel: SiLaravel,
   "REST APIs": FiServer,
   Microservices: FiShare2,
+  "Better Auth": SiBetterauth,
+  JWT: SiJsonwebtokens,
+  RabbitMQ: SiRabbitmq,
   PostgreSQL: SiPostgresql,
   MySQL: SiMysql,
   SQLite: SiSqlite,
+  Redis: SiRedis,
   Prisma: SiPrisma,
-  Docker: SiDocker,
-  Git: SiGit,
-  Linux: SiLinux,
-  RabbitMQ: SiRabbitmq,
   Supabase: SiSupabase,
-  "Better Auth": SiBetterauth,
+  C: SiC,
+  "C++": SiCplusplus,
+  Docker: SiDocker,
+  Linux: SiLinux,
+  NGINX: SiNginx,
+  Git: SiGit,
+  GitHub: SiGithub,
+  Makefile: SiGnu,
+  Vercel: SiVercel,
   Resend: SiResend,
-};
+  Cloudinary: SiCloudinary,
+  Zod: SiZod,
+  "TanStack Query": SiReactquery,
+  "React Hook Form": SiReacthookform,
+} satisfies Record<SkillName, IconType>;
 
 const skills: Skill[] = technicalSkills.map((skill) => ({
   ...skill,
-  icon: skillIcons[skill.name] ?? FiServer,
+  icon: skillIcons[skill.name],
 }));
 
-const skillColors: Record<string, { light: string; dark: string }> = {
+const skillColors = {
   "React.js": { light: "#087ea4", dark: "#61dafb" },
   "Next.js": { light: "#111827", dark: "#f8fafc" },
   TypeScript: { light: "#3178c6", dark: "#60a5d8" },
   JavaScript: { light: "#b38f00", dark: "#f7df1e" },
   "Tailwind CSS": { light: "#0891b2", dark: "#38bdf8" },
-  NestJS: { light: "#d91a4d", dark: "#f0446e" },
-  PostgreSQL: { light: "#336791", dark: "#74a6cf" },
-  Prisma: { light: "#2d3748", dark: "#d7dde5" },
-  MySQL: { light: "#006f8c", dark: "#4db8d1" },
-  Docker: { light: "#1473e6", dark: "#60aef5" },
-  Git: { light: "#e44d2e", dark: "#ff765b" },
-  Laravel: { light: "#e6291e", dark: "#ff6b63" },
-  RabbitMQ: { light: "#e85d00", dark: "#ff8a3d" },
-  Linux: { light: "#3b4252", dark: "#facc15" },
   HTML5: { light: "#d94820", dark: "#ff704d" },
   CSS3: { light: "#1565b5", dark: "#58a6e7" },
-  SQLite: { light: "#0f80cc", dark: "#58b4e8" },
-  Supabase: { light: "#168f63", dark: "#3ecf8e" },
+  "Framer Motion": { light: "#0055ff", dark: "#66a3ff" },
+  FullCalendar: { light: "#2563a6", dark: "#60a5e8" },
+  NestJS: { light: "#d91a4d", dark: "#f0446e" },
+  Laravel: { light: "#e6291e", dark: "#ff6b63" },
+  "REST APIs": { light: "#087f5b", dark: "#3dd6a2" },
+  Microservices: { light: "#6d3fc0", dark: "#a78bfa" },
   "Better Auth": { light: "#111827", dark: "#f8fafc" },
+  JWT: { light: "#9c2bc2", dark: "#d875f2" },
+  RabbitMQ: { light: "#e85d00", dark: "#ff8a3d" },
+  PostgreSQL: { light: "#336791", dark: "#74a6cf" },
+  MySQL: { light: "#006f8c", dark: "#4db8d1" },
+  SQLite: { light: "#0f80cc", dark: "#58b4e8" },
+  Redis: { light: "#b8322a", dark: "#ff6259" },
+  Prisma: { light: "#2d3748", dark: "#d7dde5" },
+  Supabase: { light: "#168f63", dark: "#3ecf8e" },
+  C: { light: "#536879", dark: "#a8b9cc" },
+  "C++": { light: "#00599c", dark: "#659ad2" },
+  Docker: { light: "#1473e6", dark: "#60aef5" },
+  Linux: { light: "#3b4252", dark: "#facc15" },
+  NGINX: { light: "#087f32", dark: "#35c766" },
+  Git: { light: "#e44d2e", dark: "#ff765b" },
+  GitHub: { light: "#181717", dark: "#f0f6fc" },
+  Makefile: { light: "#8f2f2b", dark: "#e87971" },
+  Vercel: { light: "#111827", dark: "#f8fafc" },
   Resend: { light: "#111827", dark: "#f8fafc" },
-};
+  Cloudinary: { light: "#3448c5", dark: "#7c8cff" },
+  Zod: { light: "#3e67b1", dark: "#7da6ef" },
+  "TanStack Query": { light: "#d92d48", dark: "#ff6678" },
+  "React Hook Form": { light: "#d63f79", dark: "#ec5990" },
+} satisfies Record<SkillName, { light: string; dark: string }>;
 
-const categories: Category[] = [
-  "All",
-  "Frontend",
-  "Backend",
-  "Database",
-  "Tools",
-  "Additional",
-];
+const categories: Category[] = [...skillFilters];
 
 const categoryCounts = categories.reduce(
   (counts, category) => {
@@ -128,10 +162,7 @@ const categoryCounts = categories.reduce(
 
 function SkillCard({ skill, index }: { skill: Skill; index: number }) {
   const Icon = skill.icon;
-  const colors = skillColors[skill.name] ?? {
-    light: "var(--accent)",
-    dark: "var(--accent)",
-  };
+  const colors = skillColors[skill.name];
   const colorVariables = {
     "--skill-light": colors.light,
     "--skill-dark": colors.dark,

@@ -75,8 +75,8 @@ export default function ProjectsSection() {
 
       <FoldImageGallery
         projects={foldProjects}
-        strips={5}
-        angle={60}
+        strips={4}
+        angle={45}
         smoothScroll={false}
         className="portfolio-fold-gallery w-full"
       />

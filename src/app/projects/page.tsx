@@ -87,7 +87,12 @@ export default function ProjectsPage() {
               Products · systems · experiments
             </p>
             <PageTitle
-              lines={["Work", <>index<span className="text-accent">.</span></>]}
+              lines={[
+                "Work",
+                <>
+                  index<span className="text-accent">.</span>
+                </>,
+              ]}
               className="font-display text-[clamp(3.4rem,12vw,11.5rem)] font-black uppercase leading-[0.75] tracking-[-0.08em] min-[380px]:text-[clamp(3.9rem,12vw,11.5rem)]"
             />
           </motion.div>
@@ -165,6 +170,10 @@ export default function ProjectsPage() {
           >
             {filteredProjects.map((project, index) => {
               const imageOnRight = index % 2 === 1;
+              const displayTitle =
+                "displayTitle" in project
+                  ? project.displayTitle
+                  : project.title;
               const github =
                 "github" in project && typeof project.github === "string"
                   ? project.github
@@ -224,8 +233,8 @@ export default function ProjectsPage() {
                         href={`/projects/${project.slug}`}
                         className="group/title block"
                       >
-                        <h2 className="-mt-7 max-w-2xl font-display text-[clamp(2.35rem,5.8vw,6.3rem)] font-black uppercase leading-[0.84] tracking-[-0.065em] transition-colors duration-300 group-hover/title:text-accent lg:-mt-10">
-                          {project.title}
+                        <h2 className="-mt-7 max-w-2xl break-words font-display text-[clamp(2.35rem,5.8vw,6.3rem)] font-black uppercase leading-[0.84] tracking-[-0.065em] transition-colors duration-300 group-hover/title:text-accent lg:-mt-10">
+                          {displayTitle}
                           <span className="text-accent">.</span>
                         </h2>
                       </Link>

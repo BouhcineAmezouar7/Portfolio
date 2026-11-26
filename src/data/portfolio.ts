@@ -48,28 +48,100 @@ export const socialLinks = [
 ] as const;
 
 export const technicalSkills = [
+  // Frontend
   { name: "Next.js", category: "Frontend", description: "React framework" },
   { name: "React.js", category: "Frontend", description: "UI library" },
   { name: "TypeScript", category: "Frontend", description: "Typed JavaScript" },
-  { name: "JavaScript", category: "Frontend", description: "Programming language" },
-  { name: "Tailwind CSS", category: "Frontend", description: "Utility-first CSS" },
+  {
+    name: "JavaScript",
+    category: "Frontend",
+    description: "Programming language",
+  },
+  {
+    name: "Tailwind CSS",
+    category: "Frontend",
+    description: "Utility-first CSS",
+  },
   { name: "HTML5", category: "Frontend", description: "Markup language" },
-  { name: "CSS", category: "Frontend", description: "Styling language" },
+  { name: "CSS3", category: "Frontend", description: "Styling language" },
+  { name: "Framer Motion", category: "Frontend", description: "UI animations" },
+  {
+    name: "FullCalendar",
+    category: "Frontend",
+    description: "Scheduling interfaces",
+  },
+
+  // Backend
   { name: "NestJS", category: "Backend", description: "Node.js framework" },
   { name: "Laravel", category: "Backend", description: "PHP framework" },
-  { name: "REST APIs", category: "Backend", description: "Service interfaces" },
-  { name: "Microservices", category: "Backend", description: "Distributed architecture" },
-  { name: "PostgreSQL", category: "Database", description: "Relational database" },
+  { name: "REST APIs", category: "Backend", description: "API development" },
+  {
+    name: "Microservices",
+    category: "Backend",
+    description: "Distributed architecture",
+  },
+  {
+    name: "Better Auth",
+    category: "Backend",
+    description: "Authentication framework",
+  },
+  {
+    name: "JWT",
+    category: "Backend",
+    description: "Token-based authentication",
+  },
+  { name: "RabbitMQ", category: "Backend", description: "Message broker" },
+
+  // Databases
+  {
+    name: "PostgreSQL",
+    category: "Database",
+    description: "Relational database",
+  },
   { name: "MySQL", category: "Database", description: "Relational database" },
   { name: "SQLite", category: "Database", description: "Embedded database" },
+  { name: "Redis", category: "Database", description: "In-memory data store" },
   { name: "Prisma", category: "Database", description: "Database ORM" },
+  { name: "Supabase", category: "Database", description: "Backend platform" },
+
+  // Systems & Networking
+  { name: "C", category: "Systems", description: "Low-level programming" },
+  {
+    name: "C++",
+    category: "Systems",
+    description: "Object-oriented programming",
+  },
+
+  // DevOps & Tools
   { name: "Docker", category: "Tools", description: "Containerization" },
+  { name: "Linux", category: "Tools", description: "System administration" },
+  {
+    name: "NGINX",
+    category: "Tools",
+    description: "Web server and reverse proxy",
+  },
   { name: "Git", category: "Tools", description: "Version control" },
-  { name: "Linux", category: "Tools", description: "Development environment" },
-  { name: "RabbitMQ", category: "Tools", description: "Message broker" },
-  { name: "Supabase", category: "Additional", description: "Backend platform" },
-  { name: "Better Auth", category: "Additional", description: "Authentication" },
-  { name: "Resend", category: "Additional", description: "Transactional email" },
+  { name: "GitHub", category: "Tools", description: "Code collaboration" },
+  { name: "Makefile", category: "Tools", description: "Build automation" },
+  { name: "Vercel", category: "Tools", description: "Application deployment" },
+
+  // Additional
+  {
+    name: "Resend",
+    category: "Additional",
+    description: "Transactional email",
+  },
+  {
+    name: "Cloudinary",
+    category: "Additional",
+    description: "Media management",
+  },
+  { name: "Zod", category: "Additional", description: "Schema validation" },
+  {
+    name: "React Hook Form",
+    category: "Additional",
+    description: "Form management",
+  },
 ] as const;
 
 export const projects = [
@@ -167,7 +239,16 @@ export const projects = [
     year: "1337",
     description:
       "A containerized infrastructure built with Docker and Docker Compose. It runs NGINX, WordPress, MariaDB, and additional services in isolated containers with TLS, internal networking, and persistent storage.",
-    tags: ["Docker", "Docker Compose", "NGINX", "WordPress", "MariaDB", "Redis", "Linux", "TLS"],
+    tags: [
+      "Docker",
+      "Docker Compose",
+      "NGINX",
+      "WordPress",
+      "MariaDB",
+      "Redis",
+      "Linux",
+      "TLS",
+    ],
     highlights: [
       "Custom Docker images and multi-service orchestration with Docker Compose",
       "NGINX HTTPS entry point with TLS and WordPress running through PHP-FPM",
@@ -182,21 +263,31 @@ export const projects = [
     id: 5,
     slug: "e-commerce-frontend",
     number: "05",
-    title: "E-Commerce Frontend",
+    title: "YnadimeShop",
+    displayTitle: "Ynadime Shop",
     category: "Frontend",
     image: "/projects/shop_app.png",
-    demo: "https://ecom-bamezoua.vercel.app/",
+    demo: "https://ynadime-shop.vercel.app/",
     year: "Practice project",
     description:
-      "A responsive e-commerce storefront focused on reusable UI components, product presentation, and intuitive navigation across screen sizes.",
-    tags: ["Next.js", "JavaScript", "HTML", "CSS"],
-    highlights: [
-      "Reusable interface components",
-      "Responsive storefront layouts",
-      "Product-focused presentation",
-      "Clear navigation across screen sizes",
+      "A responsive e-commerce storefront with a filterable product catalog, product details, favorites, cart and checkout flows, customer accounts, order history, and a lightweight dashboard. It runs as a front-end demo with bundled product data and browser-local persistence.",
+    tags: [
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS 4",
+      "Heroicons",
+      "Embla Carousel",
+      "localStorage",
     ],
-    type: "Frontend",
+    highlights: [
+      "Responsive storefront with featured products, categories, offers, and promotional sections",
+      "Searchable catalog with sorting and filters for category, brand, price, color, rating, and availability",
+      "Persistent favorites and cart with cash-on-delivery and simulated card checkout flows",
+      "Local account registration, login, password reset, profile management, and a demo customer account",
+      "Order confirmation, history, cancellation, and a dashboard with catalog and order summaries",
+    ],
+    type: "Frontend / E-Commerce",
     featured: false,
   },
   {
@@ -210,7 +301,15 @@ export const projects = [
     year: "1337",
     description:
       "A first-person 3D renderer built in C with MiniLibX. It transforms 2D maps into interactive textured environments using raycasting, inspired by classic Wolfenstein 3D graphics.",
-    tags: ["C", "MiniLibX", "Raycasting", "Computer Graphics", "X11", "Linux", "Makefile"],
+    tags: [
+      "C",
+      "MiniLibX",
+      "Raycasting",
+      "Computer Graphics",
+      "X11",
+      "Linux",
+      "Makefile",
+    ],
     highlights: [
       "Raycasting engine with wall intersection calculations and fish-eye correction",
       "Real-time rendering of textured walls with configurable floor and ceiling colors",
@@ -232,7 +331,15 @@ export const projects = [
     year: "1337",
     description:
       "A lightweight Unix shell built from scratch in C that recreates essential Bash behavior, including command parsing, pipelines, redirections, environment expansion, and process execution.",
-    tags: ["C", "Unix", "GNU Readline", "POSIX", "Processes", "Signals", "Makefile"],
+    tags: [
+      "C",
+      "Unix",
+      "GNU Readline",
+      "POSIX",
+      "Processes",
+      "Signals",
+      "Makefile",
+    ],
     highlights: [
       "Interactive command prompt with GNU Readline and command history",
       "Quote-aware parsing, environment variable expansion, and executable lookup through PATH",
@@ -254,7 +361,15 @@ export const projects = [
     year: "1337",
     description:
       "A collection of ten C++98 modules (CPP00–CPP09) covering object-oriented programming, memory management, templates, STL containers, and advanced algorithms through practical exercises.",
-    tags: ["C++98", "OOP", "Templates", "STL", "Algorithms", "Memory Management", "Makefile"],
+    tags: [
+      "C++98",
+      "OOP",
+      "Templates",
+      "STL",
+      "Algorithms",
+      "Memory Management",
+      "Makefile",
+    ],
     highlights: [
       "Classes, encapsulation, object lifetime, pointers, and references",
       "Orthodox Canonical Form, operator overloading, inheritance, and polymorphism",
@@ -265,6 +380,16 @@ export const projects = [
     type: "Object-Oriented Programming / Individual",
     featured: false,
   },
+] as const;
+
+export const skillFilters = [
+  "All",
+  "Frontend",
+  "Backend",
+  "Database",
+  "Systems",
+  "Tools",
+  "Additional",
 ] as const;
 
 export const projectFilters = [
@@ -345,8 +470,7 @@ export const experiences = [
     title: "Baccalaureate — Life and Earth Sciences",
     company: "Morocco",
     period: "2021",
-    description:
-      "Baccalaureate in Life and Earth Sciences (SVT).",
+    description: "Baccalaureate in Life and Earth Sciences (SVT).",
     achievements: [],
     status: "Education",
   },
