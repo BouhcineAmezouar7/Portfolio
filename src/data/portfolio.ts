@@ -8,7 +8,7 @@ export const profile = {
   location: "Casablanca, Morocco",
   school: "1337 Coding School",
   graduationYear: "2024",
-  resumePath: "/resume/Bouhcine_Amezouar_ATS_Resume.pdf",
+  resumePath: "/resume/Bouhcine_Amezouar_Resume.pdf",
   summary:
     "Full-Stack Developer and student at 1337 Coding School with hands-on experience building modern web applications using Next.js, NestJS, TypeScript, PostgreSQL, and Prisma. Experienced in REST APIs, authentication systems, database-driven applications, booking and scheduling workflows, and responsive user interfaces, with a strong foundation in software engineering, networking, Linux, Docker, and collaborative development.",
 } as const;
