@@ -138,6 +138,11 @@ export const technicalSkills = [
   },
   { name: "Zod", category: "Additional", description: "Schema validation" },
   {
+    name: "TanStack Query",
+    category: "Additional",
+    description: "Server state management",
+  },
+  {
     name: "React Hook Form",
     category: "Additional",
     description: "Form management",
