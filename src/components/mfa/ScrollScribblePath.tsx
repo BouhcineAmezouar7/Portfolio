@@ -5,9 +5,10 @@
 import { useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger, MotionPathPlugin);
 
 export type ScrollScribblePathProps = {
   /** your sections; the line runs through them */
@@ -213,6 +214,7 @@ export default function ScrollScribblePath({
       const paths = pathRefs.current
         .slice(0, colors.length)
         .filter((p) => p !== null);
+      if (!paths.length) return;
       const still = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -222,7 +224,15 @@ export default function ScrollScribblePath({
           : () => backgrounds[0] ?? "transparent";
       // `drawn` is how much of the line is out, `page` how far down the page we are.
       const state = { drawn: 0, page: 0 };
-      let length = 0;
+      type PathGeometry = ReturnType<typeof MotionPathPlugin.stringToRawPath>;
+      let pathGeometry: PathGeometry | undefined;
+      let pathData = "";
+      let boxSize = "";
+      let layoutKey = "";
+      let measuredHeight = 0;
+      let observedElements: HTMLElement[] = [];
+      const positionAt = (geometry: PathGeometry, progress: number) =>
+        MotionPathPlugin.getPositionOnPath(geometry, progress) as { x: number; y: number };
       // How low the line has reached by each point along it. Loops double back, so
       // the line's length says little about where its tip is on the page: this
       // lets the scroll ask for a height instead, keeping the tip on screen.
@@ -240,6 +250,7 @@ export default function ScrollScribblePath({
       };
 
       const paint = () => {
+        if (!pathGeometry) return;
         // Near the very end the later coats catch up, so the last one finishes.
         const finish =
           trail *
@@ -253,7 +264,7 @@ export default function ScrollScribblePath({
           path.style.strokeDashoffset = String(1 - share);
         });
         const lead = clamp(reach);
-        const point = paths[0].getPointAtLength(lead * length);
+        const point = positionAt(pathGeometry, lead);
         tip.setAttribute("cx", String(point.x));
         tip.setAttribute("cy", String(point.y));
         tip.style.visibility = lead <= 0.0005 ? "hidden" : "visible";
@@ -264,143 +275,157 @@ export default function ScrollScribblePath({
         const boxWidth = root.clientWidth;
         const boxHeight = root.clientHeight;
         if (boxWidth < 2 || boxHeight < 2) return;
-        svg.setAttribute("viewBox", `0 0 ${boxWidth} ${boxHeight}`);
-        let points = plan(boxWidth, boxHeight, {
-          loops,
-          wander,
-          untangle,
-          seed,
-        });
+        const hero = heroWaypoints && heroWaypoints.length >= 2
+          ? root.querySelector<HTMLElement>(heroSelector)
+          : null;
+        const targets = hero && routeThroughTargets
+          ? Array.from(root.querySelectorAll<HTMLElement>(threadTargetSelector))
+              .filter((target) => !hero.contains(target))
+          : [];
+        const sections = hero && !targets.length
+          ? Array.from(root.querySelectorAll<HTMLElement>(proceduralSectionSelector))
+              .filter((section) => !section.contains(hero))
+          : [];
+        observedElements = hero ? [hero, ...targets, ...sections] : [];
 
-        if (heroWaypoints && heroWaypoints.length >= 2) {
-          const hero = root.querySelector<HTMLElement>(heroSelector);
-          if (hero) {
-            const rootBox = root.getBoundingClientRect();
-            const heroBox = hero.getBoundingClientRect();
-            const heroTop = heroBox.top - rootBox.top;
-            const heroHeight = heroBox.height;
-            const heroBottom = heroTop + heroHeight;
+        const rootBox = hero ? root.getBoundingClientRect() : null;
+        const measure = (element: HTMLElement) => {
+          const box = element.getBoundingClientRect();
+          return {
+            left: box.left - (rootBox?.left ?? 0),
+            top: box.top - (rootBox?.top ?? 0),
+            width: box.width,
+            height: box.height,
+          };
+        };
+        const heroBox = hero ? measure(hero) : null;
+        const targetBoxes = targets.map(measure);
+        const sectionBoxes = sections.map(measure);
+        const size = `${boxWidth} ${boxHeight}`;
+        const key = JSON.stringify([
+          size,
+          heroBox && [heroBox.top, heroBox.height],
+          targetBoxes,
+          sectionBoxes.map(({ top, height }) => [top, height]),
+        ]);
+        if (key === layoutKey) return false;
+        layoutKey = key;
+        measuredHeight = boxHeight;
+        if (size !== boxSize) {
+          svg.setAttribute("viewBox", `0 0 ${size}`);
+          boxSize = size;
+        }
 
-            // Hero coordinates are percentages (0–100), not fixed pixels.
-            const custom: Point[] = heroWaypoints.map(([x, y]) => [
-              (x / 100) * boxWidth,
-              heroTop + (y / 100) * heroHeight,
-            ]);
+        let points: Point[];
+        if (heroBox && heroWaypoints) {
+          const heroTop = heroBox.top;
+          const heroHeight = heroBox.height;
+          const heroBottom = heroTop + heroHeight;
 
-            const targets = routeThroughTargets
-              ? Array.from(
-                  root.querySelectorAll<HTMLElement>(threadTargetSelector),
-                ).filter((target) => !hero.contains(target))
-              : [];
+          // Hero coordinates are percentages (0–100), not fixed pixels.
+          const custom: Point[] = heroWaypoints.map(([x, y]) => [
+            (x / 100) * boxWidth,
+            heroTop + (y / 100) * heroHeight,
+          ]);
 
-            if (targets.length) {
-              // Continue the same hand-drawn route through every major title.
-              // Each stop gets a loose elliptical orbit, then the line crosses
-              // the page toward the following section.
-              const routed: Point[] = [...custom];
-              let previous = routed[routed.length - 1];
+          if (targetBoxes.length) {
+            // Continue the same hand-drawn route through every major title.
+            // Each stop gets a loose elliptical orbit, then the line crosses
+            // the page toward the following section.
+            const routed: Point[] = [...custom];
+            let previous = routed[routed.length - 1];
 
-              targets.forEach((target, index) => {
-                const targetBox = target.getBoundingClientRect();
-                const left = targetBox.left - rootBox.left;
-                const top = targetBox.top - rootBox.top;
-                const targetWidth = targetBox.width;
-                const targetHeight = targetBox.height;
-                const clockwise = index % 2 === 0;
-                const centerX = gsap.utils.clamp(
-                  boxWidth * 0.12,
-                  boxWidth * 0.88,
-                  left + targetWidth * (clockwise ? 0.76 : 0.28),
-                );
-                const centerY = top + targetHeight * 0.5;
-                const radiusX = gsap.utils.clamp(
-                  Math.min(54, boxWidth * 0.12),
-                  Math.min(210, boxWidth * 0.25),
-                  targetWidth * 0.2,
-                );
-                const radiusY = gsap.utils.clamp(42, 130, targetHeight * 0.72);
-                const approachX = clockwise
-                  ? centerX - radiusX * 1.1
-                  : centerX + radiusX * 1.1;
-
-                routed.push(
-                  [
-                    previous[0] * 0.7 + approachX * 0.3,
-                    Math.max(previous[1] + 36, centerY - radiusY * 1.8),
-                  ],
-                  [approachX, centerY - radiusY * 0.25],
-                );
-
-                const turns = 14;
-                for (let step = 0; step <= turns; step++) {
-                  const progress = step / turns;
-                  const angle =
-                    (clockwise ? 1 : -1) * progress * Math.PI * 2 + Math.PI;
-                  routed.push([
-                    centerX + Math.cos(angle) * radiusX,
-                    centerY + Math.sin(angle) * radiusY,
-                  ]);
-                }
-
-                const exitX = clockwise
-                  ? centerX + radiusX * 0.55
-                  : centerX - radiusX * 0.55;
-                routed.push([exitX, top + targetHeight + radiusY * 0.65]);
-                previous = routed[routed.length - 1];
-              });
+            targetBoxes.forEach(({ left, top, width: targetWidth, height: targetHeight }, index) => {
+              const clockwise = index % 2 === 0;
+              const centerX = gsap.utils.clamp(
+                boxWidth * 0.12,
+                boxWidth * 0.88,
+                left + targetWidth * (clockwise ? 0.76 : 0.28),
+              );
+              const centerY = top + targetHeight * 0.5;
+              const radiusX = gsap.utils.clamp(
+                Math.min(54, boxWidth * 0.12),
+                Math.min(210, boxWidth * 0.25),
+                targetWidth * 0.2,
+              );
+              const radiusY = gsap.utils.clamp(42, 130, targetHeight * 0.72);
+              const approachX = clockwise
+                ? centerX - radiusX * 1.1
+                : centerX + radiusX * 1.1;
 
               routed.push(
                 [
-                  previous[0] * 0.7 + boxWidth * 0.5 * 0.3,
-                  Math.min(boxHeight - 90, previous[1] + 160),
+                  previous[0] * 0.7 + approachX * 0.3,
+                  Math.max(previous[1] + 36, centerY - radiusY * 1.8),
                 ],
-                [boxWidth * 0.5, boxHeight + 30],
+                [approachX, centerY - radiusY * 0.25],
               );
-              points = routed;
-            } else {
-              // Give every section its own deterministic hand-drawn character
-              // instead of stretching one repeated motion over the whole page.
-              const sections = Array.from(
-                root.querySelectorAll<HTMLElement>(proceduralSectionSelector),
-              ).filter((section) => !section.contains(hero));
-              const continuation = sections.flatMap((section, index) => {
-                const sectionBox = section.getBoundingClientRect();
-                const sectionTop = sectionBox.top - rootBox.top;
-                const sectionHeight = Math.max(100, sectionBox.height);
-                const generated = planSimpleSection(
-                  boxWidth,
-                  sectionHeight,
-                  seed,
-                  index,
-                  index === sections.length - 1,
-                );
 
-                return generated.map(([x, y]): Point => [
-                  x,
-                  sectionTop + y,
+              const turns = 14;
+              for (let step = 0; step <= turns; step++) {
+                const progress = step / turns;
+                const angle =
+                  (clockwise ? 1 : -1) * progress * Math.PI * 2 + Math.PI;
+                routed.push([
+                  centerX + Math.cos(angle) * radiusX,
+                  centerY + Math.sin(angle) * radiusY,
                 ]);
-              });
-
-              // Fall back to one generated continuation if the consumer does
-              // not expose section wrappers.
-              if (!continuation.length) {
-                const remaining = Math.max(100, boxHeight - heroBottom);
-                continuation.push(
-                  ...planSimpleSection(boxWidth, remaining, seed, 0, true).map(
-                    ([x, y]): Point => [x, heroBottom + y],
-                  ),
-                );
               }
 
-              points = [...custom, ...continuation];
+              const exitX = clockwise
+                ? centerX + radiusX * 0.55
+                : centerX - radiusX * 0.55;
+              routed.push([exitX, top + targetHeight + radiusY * 0.65]);
+              previous = routed[routed.length - 1];
+            });
+
+            routed.push(
+              [
+                previous[0] * 0.7 + boxWidth * 0.5 * 0.3,
+                Math.min(boxHeight - 90, previous[1] + 160),
+              ],
+              [boxWidth * 0.5, boxHeight + 30],
+            );
+            points = routed;
+          } else {
+            // Give every section its own deterministic hand-drawn character
+            // instead of stretching one repeated motion over the whole page.
+            const continuation = sectionBoxes.flatMap(({ top, height }, index) => {
+              const sectionHeight = Math.max(100, height);
+              const generated = planSimpleSection(
+                boxWidth,
+                sectionHeight,
+                seed,
+                index,
+                index === sectionBoxes.length - 1,
+              );
+
+              return generated.map(([x, y]): Point => [
+                x,
+                top + y,
+              ]);
+            });
+
+            // Fall back to one generated continuation if the consumer does
+            // not expose section wrappers.
+            if (!continuation.length) {
+              const remaining = Math.max(100, boxHeight - heroBottom);
+              continuation.push(
+                ...planSimpleSection(boxWidth, remaining, seed, 0, true).map(
+                  ([x, y]): Point => [x, heroBottom + y],
+                ),
+              );
             }
+
+            points = [...custom, ...continuation];
           }
+        } else {
+          points = plan(boxWidth, boxHeight, { loops, wander, untangle, seed });
         }
 
         const d = toPath(points);
         const stroke = Math.max(2, width * Math.min(1, boxWidth / 900));
         paths.forEach((path) => {
-          path.setAttribute("d", d);
           path.setAttribute("stroke-width", String(stroke));
         });
         start.setAttribute("cx", String(points[0][0]));
@@ -408,45 +433,75 @@ export default function ScrollScribblePath({
         start.setAttribute("r", String(Math.max(3.5, stroke * 1.6)));
         tip.setAttribute("r", String(stroke * 2.1));
         tip.setAttribute("stroke-width", String(Math.max(1.5, stroke * 0.75)));
-        length = paths[0].getTotalLength();
-        let low = -Infinity;
-        for (let i = 0; i <= SAMPLES; i++) {
-          low = Math.max(
-            low,
-            paths[0].getPointAtLength((i / SAMPLES) * length).y,
+        if (d !== pathData) {
+          pathData = d;
+          paths.forEach((path) => path.setAttribute("d", d));
+          // Cache distances along the same cubic curves the SVG renders.
+          pathGeometry = MotionPathPlugin.cacheRawPathMeasurements(
+            MotionPathPlugin.stringToRawPath(d),
+            32,
           );
-          lowest[i] = low;
+          let low = -Infinity;
+          for (let i = 0; i <= SAMPLES; i++) {
+            low = Math.max(low, positionAt(pathGeometry, i / SAMPLES).y);
+            lowest[i] = low;
+          }
         }
+        return true;
       };
       draw();
 
-      let width0 = root.clientWidth;
-      let height0 = root.clientHeight;
-      const ro = new ResizeObserver(() => {
-        if (root.clientWidth === width0 && root.clientHeight === height0)
-          return;
-        width0 = root.clientWidth;
-        height0 = root.clientHeight;
-        draw();
-        ScrollTrigger.refresh();
-      });
-      ro.observe(root);
+      const viewHeight = () =>
+        scroller ? scroller.clientHeight : window.innerHeight;
+
+      const watchLayout = (onResize: () => void) => {
+        let frame: number | undefined;
+        let observed = new Set<Element>();
+        const syncObservers = () => {
+          const next = new Set([root, ...observedElements, ...(scroller ? [scroller] : [])]);
+          for (const element of observed) {
+            if (!next.has(element)) observer.unobserve(element);
+          }
+          for (const element of next) {
+            if (!observed.has(element)) observer.observe(element);
+          }
+          observed = next;
+        };
+        let viewportHeight = viewHeight();
+        const observer = new ResizeObserver(() => {
+          if (frame !== undefined) return;
+          frame = requestAnimationFrame(() => {
+            frame = undefined;
+            const changed = draw();
+            syncObservers();
+            const nextHeight = viewHeight();
+            if (changed || nextHeight !== viewportHeight) onResize();
+            viewportHeight = nextHeight;
+          });
+        });
+        syncObservers();
+        return () => {
+          observer.disconnect();
+          if (frame !== undefined) cancelAnimationFrame(frame);
+        };
+      };
 
       if (still) {
         state.drawn = state.page = 1;
-        paint();
-        root.style.backgroundColor = backgrounds[0];
-        return () => ro.disconnect();
+        const paintStill = () => {
+          paint();
+          root.style.backgroundColor = backgrounds[0] ?? "transparent";
+        };
+        paintStill();
+        return watchLayout(paintStill);
       }
 
       // The tip holds a steady spot down the screen, so there's always line in
       // view, and the page opens with some of it already out. A loop is drawn in
       // one go as the tip reaches it, which is what the smoothing is for.
-      const viewHeight = () =>
-        scroller ? scroller.clientHeight : window.innerHeight;
       const drawnAt = (progress: number) => {
         const from = viewHeight() * TIP_SPOT;
-        return drawnFor(from + (root.clientHeight + 60 - from) * progress);
+        return drawnFor(from + (measuredHeight + 60 - from) * progress);
       };
       state.drawn = 0;
       state.page = 0;
@@ -466,9 +521,18 @@ export default function ScrollScribblePath({
         onUpdate: paint,
       });
 
+      let drawnTarget: number | undefined;
+      let pageTarget: number | undefined;
       const aim = (progress: number) => {
-        toDrawn(drawnAt(progress));
-        toPage(progress);
+        const nextDrawn = drawnAt(progress);
+        if (nextDrawn !== drawnTarget) {
+          drawnTarget = nextDrawn;
+          toDrawn(nextDrawn);
+        }
+        if (progress !== pageTarget) {
+          pageTarget = progress;
+          toPage(progress);
+        }
       };
 
       // INITIAL ANIMATION — ONLY ON PAGE LOAD / REFRESH
@@ -504,11 +568,16 @@ export default function ScrollScribblePath({
         },
       });
 
-      // CLEANUP
+      const stopWatchingLayout = watchLayout(() => {
+        // Keep the existing tween state on the new curve before updating targets.
+        paint();
+        ScrollTrigger.refresh();
+      });
+
       return () => {
         intro.kill();
         scrollTrigger.kill();
-        ro.disconnect();
+        stopWatchingLayout();
       };
     },
     {

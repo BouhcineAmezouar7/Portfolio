@@ -48,49 +48,92 @@ export const socialLinks = [
 ] as const;
 
 export const technicalSkills = [
-  // Frontend
-  { name: "Next.js", category: "Frontend", description: "React framework" },
-  { name: "React.js", category: "Frontend", description: "UI library" },
-  { name: "TypeScript", category: "Frontend", description: "Typed JavaScript" },
+  // Programming languages
+  {
+    name: "C",
+    category: "Languages",
+    description: "Low-level systems programming",
+  },
+  {
+    name: "C++",
+    category: "Languages",
+    description: "Object-oriented and systems programming",
+  },
   {
     name: "JavaScript",
+    category: "Languages",
+    description: "Dynamic web programming",
+  },
+  {
+    name: "TypeScript",
+    category: "Languages",
+    description: "Statically typed JavaScript",
+  },
+  {
+    name: "PHP",
+    category: "Languages",
+    description: "Server-side programming",
+  },
+
+  // Frontend
+  {
+    name: "Next.js",
     category: "Frontend",
-    description: "Programming language",
+    description: "Full-stack React framework",
+  },
+  {
+    name: "React.js",
+    category: "Frontend",
+    description: "Component-based user interfaces",
   },
   {
     name: "Tailwind CSS",
     category: "Frontend",
-    description: "Utility-first CSS",
+    description: "Utility-first CSS framework",
   },
-  { name: "HTML5", category: "Frontend", description: "Markup language" },
-  { name: "CSS3", category: "Frontend", description: "Styling language" },
-  { name: "Framer Motion", category: "Frontend", description: "UI animations" },
   {
-    name: "FullCalendar",
+    name: "HTML5",
     category: "Frontend",
-    description: "Scheduling interfaces",
+    description: "Semantic web structure",
+  },
+  {
+    name: "CSS3",
+    category: "Frontend",
+    description: "Responsive layouts and animations",
+  },
+  {
+    name: "Framer Motion",
+    category: "Frontend",
+    description: "Interactive UI animations",
   },
 
   // Backend
-  { name: "NestJS", category: "Backend", description: "Node.js framework" },
-  { name: "Laravel", category: "Backend", description: "PHP framework" },
+  {
+    name: "NestJS",
+    category: "Backend",
+    description: "Scalable backend application framework",
+  },
+  {
+    name: "Laravel",
+    category: "Backend",
+    description: "PHP web application framework",
+  },
   { name: "REST APIs", category: "Backend", description: "API development" },
   {
     name: "Microservices",
     category: "Backend",
-    description: "Distributed architecture",
-  },
-  {
-    name: "Better Auth",
-    category: "Backend",
-    description: "Authentication framework",
+    description: "Distributed service architecture",
   },
   {
     name: "JWT",
     category: "Backend",
     description: "Token-based authentication",
   },
-  { name: "RabbitMQ", category: "Backend", description: "Message broker" },
+  {
+    name: "RabbitMQ",
+    category: "Backend",
+    description: "Asynchronous messaging and event communication",
+  },
 
   // Databases
   {
@@ -100,19 +143,15 @@ export const technicalSkills = [
   },
   { name: "MySQL", category: "Database", description: "Relational database" },
   { name: "SQLite", category: "Database", description: "Embedded database" },
+  {
+    name: "SQL",
+    category: "Database",
+    description: "Database querying and manipulation",
+  },
   { name: "Redis", category: "Database", description: "In-memory data store" },
   { name: "Prisma", category: "Database", description: "Database ORM" },
-  { name: "Supabase", category: "Database", description: "Backend platform" },
 
-  // Systems & Networking
-  { name: "C", category: "Systems", description: "Low-level programming" },
-  {
-    name: "C++",
-    category: "Systems",
-    description: "Object-oriented programming",
-  },
-
-  // DevOps & Tools
+  // DevOps and tools
   { name: "Docker", category: "Tools", description: "Containerization" },
   { name: "Linux", category: "Tools", description: "System administration" },
   {
@@ -125,7 +164,17 @@ export const technicalSkills = [
   { name: "Makefile", category: "Tools", description: "Build automation" },
   { name: "Vercel", category: "Tools", description: "Application deployment" },
 
-  // Additional
+  // Services, integrations, and additional libraries
+  {
+    name: "Better Auth",
+    category: "Additional",
+    description: "Authentication and session management",
+  },
+  {
+    name: "Supabase",
+    category: "Additional",
+    description: "Backend-as-a-service platform",
+  },
   {
     name: "Resend",
     category: "Additional",
@@ -137,11 +186,6 @@ export const technicalSkills = [
     description: "Media management",
   },
   { name: "Zod", category: "Additional", description: "Schema validation" },
-  {
-    name: "TanStack Query",
-    category: "Additional",
-    description: "Server state management",
-  },
   {
     name: "React Hook Form",
     category: "Additional",
@@ -389,10 +433,10 @@ export const projects = [
 
 export const skillFilters = [
   "All",
+  "Languages",
   "Frontend",
   "Backend",
   "Database",
-  "Systems",
   "Tools",
   "Additional",
 ] as const;

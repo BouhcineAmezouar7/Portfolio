@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { memo, useState, type CSSProperties, type Ref } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   SiReact,
   SiNextdotjs,
   SiTypescript,
   SiJavascript,
+  SiPhp,
   SiTailwindcss,
   SiGit,
   SiDocker,
@@ -31,7 +32,6 @@ import {
   SiJsonwebtokens,
   SiNginx,
   SiReacthookform,
-  SiReactquery,
   SiRedis,
   SiResend,
   SiVercel,
@@ -40,6 +40,7 @@ import {
 import {
   FiArrowUpRight,
   FiCalendar,
+  FiDatabase,
   FiServer,
   FiShare2,
 } from "react-icons/fi";
@@ -64,11 +65,11 @@ const skillIcons = {
   "React.js": SiReact,
   TypeScript: SiTypescript,
   JavaScript: SiJavascript,
+  PHP: SiPhp,
   "Tailwind CSS": SiTailwindcss,
   HTML5: SiHtml5,
   CSS3: SiCss,
   "Framer Motion": SiFramer,
-  FullCalendar: FiCalendar,
   NestJS: SiNestjs,
   Laravel: SiLaravel,
   "REST APIs": FiServer,
@@ -79,6 +80,7 @@ const skillIcons = {
   PostgreSQL: SiPostgresql,
   MySQL: SiMysql,
   SQLite: SiSqlite,
+  SQL: FiDatabase,
   Redis: SiRedis,
   Prisma: SiPrisma,
   Supabase: SiSupabase,
@@ -94,7 +96,6 @@ const skillIcons = {
   Resend: SiResend,
   Cloudinary: SiCloudinary,
   Zod: SiZod,
-  "TanStack Query": SiReactquery,
   "React Hook Form": SiReacthookform,
 } satisfies Record<SkillName, IconType>;
 
@@ -108,11 +109,11 @@ const skillColors = {
   "Next.js": { light: "#111827", dark: "#f8fafc" },
   TypeScript: { light: "#3178c6", dark: "#60a5d8" },
   JavaScript: { light: "#b38f00", dark: "#f7df1e" },
+  PHP: { light: "#4f5b93", dark: "#8892bf" },
   "Tailwind CSS": { light: "#0891b2", dark: "#38bdf8" },
   HTML5: { light: "#d94820", dark: "#ff704d" },
   CSS3: { light: "#1565b5", dark: "#58a6e7" },
   "Framer Motion": { light: "#0055ff", dark: "#66a3ff" },
-  FullCalendar: { light: "#2563a6", dark: "#60a5e8" },
   NestJS: { light: "#d91a4d", dark: "#f0446e" },
   Laravel: { light: "#e6291e", dark: "#ff6b63" },
   "REST APIs": { light: "#087f5b", dark: "#3dd6a2" },
@@ -123,6 +124,7 @@ const skillColors = {
   PostgreSQL: { light: "#336791", dark: "#74a6cf" },
   MySQL: { light: "#006f8c", dark: "#4db8d1" },
   SQLite: { light: "#0f80cc", dark: "#58b4e8" },
+  SQL: { light: "#336791", dark: "#7fb3d5" },
   Redis: { light: "#b8322a", dark: "#ff6259" },
   Prisma: { light: "#2d3748", dark: "#d7dde5" },
   Supabase: { light: "#168f63", dark: "#3ecf8e" },
@@ -138,29 +140,32 @@ const skillColors = {
   Resend: { light: "#111827", dark: "#f8fafc" },
   Cloudinary: { light: "#3448c5", dark: "#7c8cff" },
   Zod: { light: "#3e67b1", dark: "#7da6ef" },
-  "TanStack Query": { light: "#d92d48", dark: "#ff6678" },
   "React Hook Form": { light: "#d63f79", dark: "#ec5990" },
 } satisfies Record<SkillName, { light: string; dark: string }>;
 
 const categories: Category[] = [...skillFilters];
 
-const categoryCounts = categories.reduce(
-  (counts, category) => {
-    counts[category] =
-      category === "All"
-        ? skills.length
-        : skills.filter((skill) => skill.category === category).length;
-
-    return counts;
-  },
-  {} as Record<Category, number>,
-);
+const skillsByCategory = Object.fromEntries(
+  categories.map((category) => [
+    category,
+    category === "All" ? skills : skills.filter((skill) => skill.category === category),
+  ]),
+) as Record<Category, Skill[]>;
 
 /* ----------------------------------
    SKILL CARD
 ----------------------------------- */
 
-function SkillCard({ skill, index }: { skill: Skill; index: number }) {
+// React 19 passes ref as a prop. popLayout needs the direct child's DOM node.
+const SkillCard = memo(function SkillCard({
+  skill,
+  index,
+  ref,
+}: {
+  skill: Skill;
+  index: number;
+  ref?: Ref<HTMLDivElement>;
+}) {
   const Icon = skill.icon;
   const colors = skillColors[skill.name];
   const colorVariables = {
@@ -170,7 +175,8 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
 
   return (
     <motion.div
-      layout
+      ref={ref}
+      layout="position"
       initial={{ opacity: 0, y: 38, scale: 0.94, filter: "blur(7px)" }}
       whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
       viewport={homeViewport}
@@ -235,7 +241,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       <div className="skill-accent absolute bottom-0 left-0 h-[3px] w-0 transition-all duration-500 group-hover:w-full" />
     </motion.div>
   );
-}
+});
 
 /* ----------------------------------
    CATEGORY FILTERS
@@ -276,24 +282,22 @@ function CategoryFilters({
               type="button"
               onClick={() => onCategoryChange(category)}
               aria-pressed={isActive}
-              className={`group relative flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap py-2 font-mono text-[11px] transition-colors duration-300 ${
-                isActive
+              className={`group relative flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap py-2 font-mono text-[11px] transition-colors duration-300 ${isActive
                   ? "text-foreground"
                   : "text-muted hover:text-foreground"
-              }`}
+                }`}
             >
               {/* CATEGORY NAME */}
               <span>{category}</span>
 
               {/* CATEGORY COUNT */}
               <span
-                className={`text-[9px] transition-colors duration-300 ${
-                  isActive
+                className={`text-[9px] transition-colors duration-300 ${isActive
                     ? "text-accent"
                     : "text-muted/50 group-hover:text-foreground/60"
-                }`}
+                  }`}
               >
-                {String(categoryCounts[category]).padStart(2, "0")}
+                {String(skillsByCategory[category].length).padStart(2, "0")}
               </span>
 
               {/* ANIMATED UNDERLINE */}
@@ -321,13 +325,6 @@ function CategoryFilters({
 ----------------------------------- */
 
 export default function SkillsShowcase() {
-  const [activeCategory, setActiveCategory] = useState<Category>("All");
-
-  const filteredSkills =
-    activeCategory === "All"
-      ? skills
-      : skills.filter((skill) => skill.category === activeCategory);
-
   return (
     <section
       id="skills"
@@ -383,45 +380,52 @@ export default function SkillsShowcase() {
           </div>
         </motion.div>
 
-        {/* FILTER + GRID BELOW HEADER */}
-        <div className="min-w-0 pt-8">
-          <motion.div
-            initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            viewport={homeViewport}
-            transition={{ duration: 0.7, ease: homeEase }}
-          >
-            <CategoryFilters
-              activeCategory={activeCategory}
-              onCategoryChange={setActiveCategory}
-            />
-          </motion.div>
-
-          <motion.div
-            layout
-            className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:gap-3 xl:grid-cols-4"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredSkills.map((skill, index) => (
-                <SkillCard key={skill.name} skill={skill} index={index} />
-              ))}
-            </AnimatePresence>
-          </motion.div>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
-            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-              Always learning. Always building.
-            </span>
-
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-border" />
-              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
-                Showing {filteredSkills.length} of {skills.length}
-              </span>
-            </div>
-          </div>
-        </div>
+        <SkillsFilterGrid />
       </div>
     </section>
+  );
+}
+
+function SkillsFilterGrid() {
+  const [activeCategory, setActiveCategory] = useState<Category>("All");
+  const filteredSkills = skillsByCategory[activeCategory];
+
+  return (
+    <div className="min-w-0 pt-8">
+      <motion.div
+        initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={homeViewport}
+        transition={{ duration: 0.7, ease: homeEase }}
+      >
+        <CategoryFilters
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
+      </motion.div>
+
+      <div
+        className="relative grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:gap-3 xl:grid-cols-4"
+      >
+        <AnimatePresence mode="popLayout">
+          {filteredSkills.map((skill, index) => (
+            <SkillCard key={skill.name} skill={skill} index={index} />
+          ))}
+        </AnimatePresence>
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
+        <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
+          Always learning. Always building.
+        </span>
+
+        <div className="flex items-center gap-3">
+          <span className="h-px w-8 bg-border" />
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
+            Showing {filteredSkills.length} of {skills.length}
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }
